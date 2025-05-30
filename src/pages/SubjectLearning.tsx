@@ -71,26 +71,25 @@ const SubjectLearning = () => {
             variant="ghost"
             size="sm"
             onClick={() => navigate("/dashboard")}
-            className="text-white hover:bg-purple-700"
+            className="text-white hover:bg-purple-700 min-w-[44px] min-h-[44px] flex items-center justify-center"
           >
             ← Back
           </Button>
-          <div className="w-8 h-8 bg-purple-300 rounded-full flex items-center justify-center">
-            <span className="text-purple-800 font-bold">U</span>
-          </div>
+          <h1 className="text-xl font-bold text-center flex-1">Learn</h1>
+          <div className="w-11 h-11"></div> {/* Spacer for alignment */}
         </div>
 
         <div className="relative z-10 px-6 pb-8">
-          <h1 className="text-3xl font-bold text-white mb-2">
-            Welcome to {subjectTitle} World
-          </h1>
+          <h2 className="text-3xl font-bold text-white mb-2 text-center">
+            {subjectTitle} World
+          </h2>
         </div>
       </div>
 
       {/* Search Bar */}
       <div className="px-6 -mt-8 relative z-20">
         <Input
-          placeholder={`Search ${subject} topics...`}
+          placeholder="Search Topics..."
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
           className="w-full bg-white shadow-lg rounded-lg border-0 py-3 px-4"
@@ -107,7 +106,7 @@ const SubjectLearning = () => {
           >
             <div className="flex items-center justify-between">
               <div>
-                <h3 className="text-lg font-semibold text-gray-800">
+                <h3 className="text-lg font-semibold text-purple-600">
                   {topic}
                 </h3>
               </div>

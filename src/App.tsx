@@ -1,4 +1,3 @@
-
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -21,6 +20,7 @@ import Settings from "./pages/Settings";
 import Feedback from "./pages/Feedback";
 import Support from "./pages/Support";
 import NotFound from "./pages/NotFound";
+import GamePlay from "./pages/GamePlay";
 
 const queryClient = new QueryClient();
 
@@ -44,6 +44,7 @@ const App = () => (
           <Route path="/quiz/:subject" element={<QuizGame />} />
           <Route path="/profile" element={<Profile />} />
           <Route path="/games" element={<Games />} />
+          <Route path="/game/:subject/:gameName" element={<GamePlay />} />
           <Route path="/settings" element={<Settings />} />
           <Route path="/feedback" element={<Feedback />} />
           <Route path="/support" element={<Support />} />

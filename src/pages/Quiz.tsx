@@ -2,6 +2,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
 import NavigationBar from "@/components/NavigationBar";
 
 const Quiz = () => {
@@ -18,7 +19,8 @@ const Quiz = () => {
   ];
 
   const filteredQuizzes = quizzes.filter(quiz =>
-    quiz.name.toLowerCase().includes(searchQuery.toLowerCase())
+    quiz.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    quiz.subject.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
   const handleQuizClick = (quizSubject: string) => {
@@ -39,8 +41,27 @@ const Quiz = () => {
           </svg>
         </div>
         
-        <div className="relative z-10 flex flex-col items-center justify-center h-full text-white">
-          <h1 className="text-3xl font-bold mb-2">Quizzes</h1>
+        <div className="relative z-10 flex items-center justify-between p-6 text-white">
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={() => navigate("/dashboard")}
+            className="text-white hover:bg-purple-700 min-w-[44px] min-h-[44px] flex items-center justify-center"
+          >
+            ← Back
+          </Button>
+          <h1 className="text-2xl font-bold">Quiz</h1>
+          <Button
+            variant="ghost"
+            size="sm"
+            className="text-white hover:bg-purple-700 min-w-[44px] min-h-[44px] flex items-center justify-center"
+            onClick={() => {/* Show quiz hints */}}
+          >
+            ❓
+          </Button>
+        </div>
+        
+        <div className="relative z-10 flex flex-col items-center justify-center text-white pb-8">
           <div className="text-4xl">🏆</div>
         </div>
       </div>
@@ -48,7 +69,7 @@ const Quiz = () => {
       {/* Search Bar */}
       <div className="px-6 -mt-8 relative z-20">
         <Input
-          placeholder="Search quizzes..."
+          placeholder="Search Topics..."
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
           className="w-full bg-white shadow-lg rounded-lg border-0 py-3 px-4"

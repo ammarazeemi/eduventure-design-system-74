@@ -21,7 +21,8 @@ const Games = () => {
   ];
 
   const filteredGames = games.filter(game =>
-    game.name.toLowerCase().includes(searchQuery.toLowerCase())
+    game.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    game.subject.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
   return (
@@ -43,23 +44,22 @@ const Games = () => {
             variant="ghost"
             size="sm"
             onClick={() => navigate("/dashboard")}
-            className="text-white hover:bg-purple-700"
+            className="text-white hover:bg-purple-700 min-w-[44px] min-h-[44px] flex items-center justify-center"
           >
             ← Back
           </Button>
-          <h1 className="text-2xl font-bold">Eduventure</h1>
+          <h1 className="text-2xl font-bold">Subject Games</h1>
           <Button
             variant="ghost"
             size="sm"
-            className="text-white hover:bg-purple-700"
-            onClick={() => {/* Show hints */}}
+            className="text-white hover:bg-purple-700 min-w-[44px] min-h-[44px] flex items-center justify-center"
+            onClick={() => {/* Show game hints */}}
           >
             ❓
           </Button>
         </div>
         
         <div className="relative z-10 flex flex-col items-center justify-center text-white pb-8">
-          <h1 className="text-3xl font-bold mb-2">Educational Games</h1>
           <div className="text-4xl">🎮</div>
         </div>
       </div>
@@ -67,7 +67,7 @@ const Games = () => {
       {/* Search Bar */}
       <div className="px-6 -mt-8 relative z-20">
         <Input
-          placeholder="Search games..."
+          placeholder="Search Topics..."
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
           className="w-full bg-white shadow-lg rounded-lg border-0 py-3 px-4"

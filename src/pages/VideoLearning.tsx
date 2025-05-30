@@ -13,19 +13,22 @@ const VideoLearning = () => {
       title: `${decodedTopic} - Introduction`,
       duration: "5:30",
       thumbnail: "🎬",
-      description: `A comprehensive introduction to ${decodedTopic} covering the basic concepts and fundamentals.`
+      description: `A comprehensive introduction to ${decodedTopic} covering the basic concepts and fundamentals.`,
+      videoId: "dQw4w9WgXcQ" // Example YouTube video ID
     },
     {
       title: `${decodedTopic} - Deep Dive`,
       duration: "12:45",
       thumbnail: "🔍",
-      description: `An in-depth exploration of ${decodedTopic} with detailed explanations and examples.`
+      description: `An in-depth exploration of ${decodedTopic} with detailed explanations and examples.`,
+      videoId: "dQw4w9WgXcQ"
     },
     {
       title: `${decodedTopic} - Practical Applications`,
       duration: "8:20",
       thumbnail: "⚡",
-      description: `Real-world applications and practical uses of ${decodedTopic} in everyday life.`
+      description: `Real-world applications and practical uses of ${decodedTopic} in everyday life.`,
+      videoId: "dQw4w9WgXcQ"
     }
   ];
 
@@ -40,16 +43,15 @@ const VideoLearning = () => {
             variant="ghost"
             size="sm"
             onClick={() => navigate(`/topic/${subject}/${encodeURIComponent(decodedTopic)}`)}
-            className="text-white hover:bg-purple-700"
+            className="text-white hover:bg-purple-700 min-w-[44px] min-h-[44px] flex items-center justify-center"
           >
             ← Back
           </Button>
-          <div className="w-8 h-8 bg-purple-300 rounded-full flex items-center justify-center">
-            <span className="text-purple-800 font-bold">U</span>
-          </div>
+          <h1 className="text-xl font-bold text-center flex-1">Learn with Video</h1>
+          <div className="w-11 h-11"></div> {/* Spacer for alignment */}
         </div>
         
-        <h1 className="text-2xl font-bold mb-2">{decodedTopic} Videos</h1>
+        <h2 className="text-2xl font-bold mb-4 text-center">{decodedTopic}</h2>
         
         {/* Progress Bar */}
         <div className="space-y-2">
@@ -66,14 +68,16 @@ const VideoLearning = () => {
         <div className="space-y-6">
           {videos.map((video, index) => (
             <div key={index} className="bg-white rounded-xl shadow-lg overflow-hidden border border-gray-200">
-              {/* Video Thumbnail/Player Area */}
-              <div className="relative h-48 bg-gradient-to-br from-gray-100 to-gray-200 flex items-center justify-center">
-                <div className="text-center">
-                  <div className="text-6xl mb-2">{video.thumbnail}</div>
-                  <Button className="bg-red-600 hover:bg-red-700 text-white rounded-full px-6 py-2">
-                    ▶ Play Video
-                  </Button>
-                </div>
+              {/* Video Player Area */}
+              <div className="relative h-48 bg-gradient-to-br from-gray-100 to-gray-200">
+                <iframe
+                  className="w-full h-full rounded-t-xl"
+                  src={`https://www.youtube.com/embed/${video.videoId}`}
+                  title={video.title}
+                  frameBorder="0"
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                  allowFullScreen
+                ></iframe>
                 
                 {/* Duration Badge */}
                 <div className="absolute bottom-4 right-4 bg-black bg-opacity-70 text-white px-2 py-1 rounded text-sm">
@@ -83,7 +87,7 @@ const VideoLearning = () => {
               
               {/* Video Info */}
               <div className="p-6">
-                <h3 className="text-xl font-bold text-gray-800 mb-2">
+                <h3 className="text-xl font-bold text-purple-600 mb-2">
                   {video.title}
                 </h3>
                 <p className="text-gray-600 leading-relaxed">
@@ -108,7 +112,7 @@ const VideoLearning = () => {
 
         {/* Continue Learning Section */}
         <div className="mt-8 bg-gradient-to-r from-purple-50 to-purple-100 rounded-xl p-6">
-          <h3 className="text-lg font-semibold text-gray-800 mb-3">Continue Your Learning Journey</h3>
+          <h3 className="text-lg font-semibold text-purple-600 mb-3">Continue Your Learning Journey</h3>
           <p className="text-gray-600 mb-4">
             After watching these videos, test your knowledge with our interactive quizzes or explore related topics.
           </p>
