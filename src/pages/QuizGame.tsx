@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
@@ -13,7 +14,8 @@ const QuizGame = () => {
   const [isAnswered, setIsAnswered] = useState(false);
 
   const quizData: { [key: string]: any } = {
-    "biology-cell": {
+    // Biology quizzes
+    "biology-cells": {
       title: "Cell Biology Quiz",
       questions: [
         {
@@ -43,7 +45,43 @@ const QuizGame = () => {
         }
       ]
     },
-    "math-algebra": {
+    "biology-dna": {
+      title: "DNA Quiz",
+      questions: [
+        {
+          question: "What does DNA stand for?",
+          options: ["Deoxyribonucleic Acid", "Deoxyribose Acid", "Dynamic Nuclear Acid", "Double Nuclear Acid"],
+          correct: 0
+        },
+        {
+          question: "DNA is made up of how many strands?",
+          options: ["1", "2", "3", "4"],
+          correct: 1
+        },
+        {
+          question: "Which bases pair together in DNA?",
+          options: ["A-T and G-C", "A-G and T-C", "A-C and T-G", "All pair equally"],
+          correct: 0
+        }
+      ]
+    },
+    "biology-photosynthesis": {
+      title: "Photosynthesis Quiz",
+      questions: [
+        {
+          question: "Where does photosynthesis occur in plants?",
+          options: ["Roots", "Stems", "Leaves", "Flowers"],
+          correct: 2
+        },
+        {
+          question: "What gas do plants release during photosynthesis?",
+          options: ["Carbon dioxide", "Nitrogen", "Oxygen", "Hydrogen"],
+          correct: 2
+        }
+      ]
+    },
+    // Mathematics quizzes
+    "mathematics-algebra": {
       title: "Algebra Quiz",
       questions: [
         {
@@ -73,6 +111,22 @@ const QuizGame = () => {
         }
       ]
     },
+    "mathematics-geometry": {
+      title: "Geometry Quiz",
+      questions: [
+        {
+          question: "What is the sum of angles in a triangle?",
+          options: ["90°", "180°", "270°", "360°"],
+          correct: 1
+        },
+        {
+          question: "What is the area of a circle with radius 5?",
+          options: ["25π", "10π", "5π", "15π"],
+          correct: 0
+        }
+      ]
+    },
+    // Geography quizzes
     "geography-volcanoes": {
       title: "Volcanoes Quiz",
       questions: [
@@ -98,6 +152,22 @@ const QuizGame = () => {
         }
       ]
     },
+    "geography-climate": {
+      title: "Climate Quiz",
+      questions: [
+        {
+          question: "What is the main cause of seasons?",
+          options: ["Distance from sun", "Earth's tilt", "Solar flares", "Moon phases"],
+          correct: 1
+        },
+        {
+          question: "Which climate zone is hottest?",
+          options: ["Temperate", "Polar", "Tropical", "Desert"],
+          correct: 2
+        }
+      ]
+    },
+    // Chemistry quizzes
     "chemistry-periodic-table": {
       title: "Periodic Table Quiz",
       questions: [
@@ -122,11 +192,133 @@ const QuizGame = () => {
           correct: 2
         }
       ]
+    },
+    "chemistry-atoms": {
+      title: "Atoms Quiz",
+      questions: [
+        {
+          question: "What particles are found in the nucleus?",
+          options: ["Protons and electrons", "Protons and neutrons", "Neutrons and electrons", "Only protons"],
+          correct: 1
+        },
+        {
+          question: "What charge do electrons have?",
+          options: ["Positive", "Negative", "Neutral", "Variable"],
+          correct: 1
+        }
+      ]
+    },
+    // Physics quizzes
+    "physics-motion": {
+      title: "Motion Quiz",
+      questions: [
+        {
+          question: "What is velocity?",
+          options: ["Speed only", "Displacement per unit time", "Distance per unit time", "Acceleration"],
+          correct: 1
+        },
+        {
+          question: "What is Newton's first law?",
+          options: ["F=ma", "Objects at rest stay at rest", "Action-reaction", "Energy conservation"],
+          correct: 1
+        }
+      ]
+    },
+    "physics-forces": {
+      title: "Forces Quiz",
+      questions: [
+        {
+          question: "What is the formula for force?",
+          options: ["F = ma", "F = mv", "F = m/a", "F = a/m"],
+          correct: 0
+        },
+        {
+          question: "What force opposes motion?",
+          options: ["Gravity", "Friction", "Normal force", "Applied force"],
+          correct: 1
+        }
+      ]
+    },
+    // English quizzes
+    "english-grammar": {
+      title: "Grammar Quiz",
+      questions: [
+        {
+          question: "What part of speech is the word 'quickly'?",
+          options: ["Noun", "Verb", "Adjective", "Adverb"],
+          correct: 3
+        },
+        {
+          question: "Which is a proper noun?",
+          options: ["dog", "city", "London", "happiness"],
+          correct: 2
+        }
+      ]
+    },
+    "english-literature": {
+      title: "Literature Quiz",
+      questions: [
+        {
+          question: "Who wrote 'Romeo and Juliet'?",
+          options: ["Charles Dickens", "William Shakespeare", "Jane Austen", "Mark Twain"],
+          correct: 1
+        }
+      ]
+    },
+    // Computer Science quizzes
+    "computer-science-programming": {
+      title: "Programming Quiz",
+      questions: [
+        {
+          question: "What is a variable?",
+          options: ["A constant value", "Storage for data", "A function", "An algorithm"],
+          correct: 1
+        },
+        {
+          question: "Which language is known for web development?",
+          options: ["Python", "JavaScript", "C++", "Java"],
+          correct: 1
+        }
+      ]
+    },
+    "computer-science-algorithms": {
+      title: "Algorithms Quiz",
+      questions: [
+        {
+          question: "What is an algorithm?",
+          options: ["A programming language", "Step-by-step procedure", "A computer", "A website"],
+          correct: 1
+        }
+      ]
     }
   };
 
-  const quizKey = `${subject}-${topic}` || "biology-cell";
-  const currentQuiz = quizData[quizKey] || quizData["biology-cell"];
+  // Create quiz key and find the correct quiz
+  const quizKey = `${subject}-${topic}`;
+  let currentQuiz = quizData[quizKey];
+  
+  // If specific quiz not found, try to find any quiz for this subject
+  if (!currentQuiz && subject) {
+    const subjectQuizzes = Object.keys(quizData).filter(key => key.startsWith(subject + '-'));
+    if (subjectQuizzes.length > 0) {
+      currentQuiz = quizData[subjectQuizzes[0]];
+    }
+  }
+  
+  // Final fallback to a default quiz if nothing found
+  if (!currentQuiz) {
+    currentQuiz = {
+      title: "General Quiz",
+      questions: [
+        {
+          question: "What is 2 + 2?",
+          options: ["3", "4", "5", "6"],
+          correct: 1
+        }
+      ]
+    };
+  }
+
   const questions = currentQuiz.questions;
   const totalQuestions = questions.length;
 
