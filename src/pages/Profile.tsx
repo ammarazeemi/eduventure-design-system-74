@@ -4,12 +4,20 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Switch } from "@/components/ui/switch";
 import NavigationBar from "@/components/NavigationBar";
+import { useAuth } from "@/contexts/AuthContext";
+import { useNavigate } from "react-router-dom";
+import { useToast } from "@/hooks/use-toast";
+import LoadingSpinner from "@/components/LoadingSpinner";
 
 const Profile = () => {
+  const { user, logout } = useAuth();
+  const navigate = useNavigate();
+  const { toast } = useToast();
   const [soundEffects, setSoundEffects] = useState(false);
   const [notifications, setNotifications] = useState(true);
   const [showFeedbackForm, setShowFeedbackForm] = useState(false);
   const [feedback, setFeedback] = useState("");
+  const [isSaving, setIsSaving] = useState(false);
 
   const achievements = [
     { name: "Math Master", percentage: 95, badge: "🏆" },
@@ -27,12 +35,34 @@ const Profile = () => {
 
   const handleFeedbackSubmit = () => {
     if (feedback.trim()) {
-      // In a real app, this would send to a backend
-      alert("Thank you for your feedback! We appreciate your input.");
-      setFeedback("");
-      setShowFeedbackForm(false);
+      setIsSaving(true);
+      
+      // Simulate API call
+      setTimeout(() => {
+        setIsSaving(false);
+        toast({
+          title: "Thank you!",
+          description: "Your feedback has been submitted.",
+        });
+        setFeedback("");
+        setShowFeedbackForm(false);
+      }, 1000);
     }
   };
+
+  const handleLogout = () => {
+    logout();
+    toast({
+      title: "Signed out",
+      description: "You have been successfully logged out.",
+    });
+    navigate("/");
+  };
+
+  if (!user) {
+    navigate("/");
+    return null;
+  }
 
   return (
     <div className="min-h-screen bg-white pb-20">
@@ -50,9 +80,12 @@ const Profile = () => {
         
         <div className="relative z-10 flex flex-col items-center justify-center h-full text-white">
           <div className="w-20 h-20 bg-purple-300 rounded-full flex items-center justify-center mb-4">
-            <span className="text-purple-800 font-bold text-2xl">U</span>
+            <span className="text-purple-800 font-bold text-2xl">
+              {user.name ? user.name.charAt(0).toUpperCase() : "U"}
+            </span>
           </div>
-          <h1 className="text-2xl font-bold">User Profile</h1>
+          <h1 className="text-2xl font-bold">{user.name}</h1>
+          <p className="text-purple-200 text-sm">{user.email}</p>
         </div>
       </div>
 
@@ -118,14 +151,27 @@ const Profile = () => {
               <span className="text-gray-800 font-medium">Notifications</span>
               <Switch
                 checked={notifications}
-                onCheckedChange={setNotifications}
+                onCheckedChange={(checked) => {
+                  setNotifications(checked);
+                  toast({
+                    title: checked ? "Notifications enabled" : "Notifications disabled",
+                    description: checked 
+                      ? "You will receive notifications" 
+                      : "You will not receive notifications"
+                  });
+                }}
               />
             </div>
             <div className="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
               <span className="text-gray-800 font-medium">Sound Effects</span>
               <Switch
                 checked={soundEffects}
-                onCheckedChange={setSoundEffects}
+                onCheckedChange={(checked) => {
+                  setSoundEffects(checked);
+                  toast({
+                    title: checked ? "Sound effects enabled" : "Sound effects disabled",
+                  });
+                }}
               />
             </div>
           </div>
@@ -153,28 +199,46 @@ const Profile = () => {
                 onChange={(e) => setFeedback(e.target.value)}
                 placeholder="Tell us what you think about Eduventure..."
                 className="w-full p-3 border border-gray-300 rounded-lg resize-none h-32 focus:outline-none focus:ring-2 focus:ring-purple-500"
+                disabled={isSaving}
               />
               <div className="flex space-x-3">
-                <Button 
-                  onClick={handleFeedbackSubmit}
-                  className="flex-1 bg-purple-600 hover:bg-purple-700"
-                  disabled={!feedback.trim()}
-                >
-                  Submit
-                </Button>
-                <Button 
-                  onClick={() => {
-                    setShowFeedbackForm(false);
-                    setFeedback("");
-                  }}
-                  variant="outline"
-                  className="flex-1"
-                >
-                  Cancel
-                </Button>
+                {isSaving ? (
+                  <LoadingSpinner message="Submitting..." />
+                ) : (
+                  <>
+                    <Button 
+                      onClick={handleFeedbackSubmit}
+                      className="flex-1 bg-purple-600 hover:bg-purple-700"
+                      disabled={!feedback.trim()}
+                    >
+                      Submit
+                    </Button>
+                    <Button 
+                      onClick={() => {
+                        setShowFeedbackForm(false);
+                        setFeedback("");
+                      }}
+                      variant="outline"
+                      className="flex-1"
+                    >
+                      Cancel
+                    </Button>
+                  </>
+                )}
               </div>
             </div>
           )}
+        </div>
+
+        {/* Sign Out Button */}
+        <div>
+          <Button 
+            onClick={handleLogout}
+            variant="outline" 
+            className="w-full border-red-200 text-red-600 hover:bg-red-50 hover:text-red-700"
+          >
+            Sign Out
+          </Button>
         </div>
       </div>
 

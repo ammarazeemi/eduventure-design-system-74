@@ -3,25 +3,18 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Input } from "@/components/ui/input";
 import NavigationBar from "@/components/NavigationBar";
+import { subjects } from "@/data/educationalData";
+import { Button } from "@/components/ui/button";
+import { ChevronLeft } from "lucide-react";
 
 const Explore = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const navigate = useNavigate();
 
-  const subjects = [
-    { name: "Biology", icon: "🧬", color: "from-green-300 to-green-400", path: "biology" },
-    { name: "Maths", icon: "📊", color: "from-blue-300 to-blue-400", path: "maths" },
-    { name: "Chemistry", icon: "⚛️", color: "from-orange-300 to-orange-400", path: "chemistry" },
-    { name: "Geography", icon: "🌍", color: "from-emerald-300 to-emerald-400", path: "geography" },
-    { name: "English", icon: "📚", color: "from-pink-300 to-pink-400", path: "english" },
-    { name: "Physics", icon: "⚡", color: "from-yellow-300 to-yellow-400", path: "physics" },
-    { name: "Computer Science", icon: "💻", color: "from-indigo-300 to-indigo-400", path: "computer-science" },
-    { name: "History", icon: "🏛️", color: "from-red-300 to-red-400", path: "history" },
-    { name: "Environmental Science", icon: "🌱", color: "from-teal-300 to-teal-400", path: "environmental-science" }
-  ];
-
   const filteredSubjects = subjects.filter(subject =>
-    subject.name.toLowerCase().includes(searchQuery.toLowerCase())
+    subject.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    subject.subtitle.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    subject.id.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
   return (
@@ -38,8 +31,22 @@ const Explore = () => {
           </svg>
         </div>
         
-        <div className="relative z-10 flex flex-col items-center justify-center h-full text-white">
-          <h1 className="text-3xl font-bold mb-2">Explore Subjects</h1>
+        <div className="relative z-10 flex items-center justify-between p-6 text-white">
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={() => navigate("/dashboard")}
+            className="text-white hover:bg-purple-700"
+          >
+            <ChevronLeft className="h-5 w-5 mr-1" />
+            Back
+          </Button>
+          <h1 className="text-2xl font-bold">Explore Subjects</h1>
+          <div className="w-10"></div> {/* Spacer for alignment */}
+        </div>
+        
+        <div className="relative z-10 flex flex-col items-center justify-center text-white pb-8">
+          <div className="text-4xl">🧭</div>
         </div>
       </div>
 
@@ -55,20 +62,33 @@ const Explore = () => {
 
       {/* Subjects Grid */}
       <div className="px-6 py-8 grid grid-cols-2 gap-4">
-        {filteredSubjects.map((subject, index) => (
-          <div
-            key={index}
-            onClick={() => navigate(`/learn/${subject.path}`)}
-            className={`bg-gradient-to-r ${subject.color} rounded-2xl p-4 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 cursor-pointer`}
-          >
-            <div className="text-center">
-              <div className="text-3xl mb-2">{subject.icon}</div>
-              <h3 className="font-semibold text-gray-800 text-sm">
-                {subject.name}
-              </h3>
+        {filteredSubjects.length > 0 ? (
+          filteredSubjects.map((subject, index) => (
+            <div
+              key={index}
+              onClick={() => navigate(`/learn/${subject.path}`)}
+              className={`bg-gradient-to-r ${subject.color} rounded-2xl p-4 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 cursor-pointer h-32 flex flex-col items-center justify-center`}
+            >
+              <div className="text-center">
+                <div className="text-3xl mb-2">{subject.icon}</div>
+                <h3 className="font-semibold text-gray-800 text-sm">
+                  {subject.title}
+                </h3>
+              </div>
             </div>
+          ))
+        ) : (
+          <div className="text-center py-10 col-span-2">
+            <p className="text-gray-500">No subjects found matching "{searchQuery}"</p>
+            <Button
+              variant="outline"
+              onClick={() => setSearchQuery("")}
+              className="mt-4"
+            >
+              Clear Search
+            </Button>
           </div>
-        ))}
+        )}
       </div>
 
       <NavigationBar currentPage="explore" />

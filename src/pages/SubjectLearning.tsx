@@ -1,76 +1,48 @@
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Drawer, DrawerClose, DrawerContent, DrawerTrigger } from "@/components/ui/drawer";
 import NavigationBar from "@/components/NavigationBar";
+import { subjects } from "@/data/educationalData";
+import { useAuth } from "@/contexts/AuthContext";
+import { ChevronLeft, Menu, User, HelpCircle } from "lucide-react";
+import { useToast } from "@/hooks/use-toast";
+import LoadingSpinner from "@/components/LoadingSpinner";
 
 const SubjectLearning = () => {
-  const { subject } = useParams<{ subject: string }>();
+  const { subject: subjectId } = useParams<{ subject: string }>();
   const navigate = useNavigate();
+  const { user, logout } = useAuth();
+  const { toast } = useToast();
   const [searchQuery, setSearchQuery] = useState("");
+  const [isLoading, setIsLoading] = useState(true);
 
-  const subjectData: { [key: string]: any } = {
-    biology: {
-      title: "BIOLOGY",
-      icon: "🧬",
-      color: "from-green-300 to-green-400",
-      topics: [
-        { name: "Cells", icon: "🔬", progress: 75 },
-        { name: "DNA", icon: "🧬", progress: 60 },
-        { name: "Human Body", icon: "👤", progress: 40 },
-        { name: "Photosynthesis", icon: "🌱", progress: 90 },
-        { name: "Evolution", icon: "🦕", progress: 25 },
-        { name: "Microbes", icon: "🦠", progress: 55 }
-      ]
-    },
-    geography: {
-      title: "GEOGRAPHY",
-      icon: "🌍",
-      color: "from-emerald-300 to-emerald-400",
-      topics: [
-        { name: "Volcanoes", icon: "🌋", progress: 80 },
-        { name: "Maps", icon: "🗺️", progress: 65 },
-        { name: "Earth Layers", icon: "🌍", progress: 45 },
-        { name: "Climate", icon: "🌤️", progress: 30 },
-        { name: "Ecosystems", icon: "🌿", progress: 70 }
-      ]
-    },
-    chemistry: {
-      title: "CHEMISTRY",
-      icon: "⚛️",
-      color: "from-orange-300 to-orange-400",
-      topics: [
-        { name: "Atoms", icon: "⚛️", progress: 85 },
-        { name: "Periodic Table", icon: "📊", progress: 75 },
-        { name: "Molecules", icon: "🔬", progress: 60 },
-        { name: "Reactions", icon: "⚗️", progress: 40 },
-        { name: "Covalent Bonds", icon: "🔗", progress: 55 }
-      ]
-    },
-    maths: {
-      title: "MATHEMATICS",
-      icon: "📊",
-      color: "from-blue-300 to-blue-400",
-      topics: [
-        { name: "Algebra", icon: "🔢", progress: 90 },
-        { name: "Geometry", icon: "📐", progress: 70 },
-        { name: "Linear Equations", icon: "📈", progress: 80 },
-        { name: "Probability", icon: "🎲", progress: 45 },
-        { name: "Number Theory", icon: "🔢", progress: 95 }
-      ]
-    }
-  };
+  // Simulate loading effect
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setIsLoading(false);
+    }, 700);
+    return () => clearTimeout(timer);
+  }, [subjectId]);
 
-  const currentSubject = subjectData[subject || "biology"] || subjectData.biology;
+  const currentSubject = subjects.find(s => s.id === subjectId) || subjects[0];
   
-  const filteredTopics = currentSubject.topics.filter((topic: any) =>
-    topic.name.toLowerCase().includes(searchQuery.toLowerCase())
+  const filteredTopics = currentSubject.topics.filter((topic) =>
+    topic.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    topic.description.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
-  const handleTopicClick = (topicName: string) => {
-    navigate(`/topic/${subject}/${encodeURIComponent(topicName)}`);
+  const handleTopicClick = (topicId: string) => {
+    navigate(`/topic/${currentSubject.id}/${topicId}`);
+  };
+
+  const handleSubjectHelp = () => {
+    toast({
+      title: `${currentSubject.title} Learning`,
+      description: `Explore topics in ${currentSubject.title.toLowerCase()} and track your progress!`,
+    });
   };
 
   return (
@@ -92,22 +64,32 @@ const SubjectLearning = () => {
             variant="ghost"
             size="sm"
             onClick={() => navigate("/dashboard")}
-            className="text-gray-800 hover:bg-white hover:bg-opacity-20 min-w-[44px] min-h-[44px] flex items-center justify-center"
+            className="text-gray-800 hover:bg-white hover:bg-opacity-20"
           >
-            ← Back
+            <ChevronLeft className="h-5 w-5 mr-1" />
+            Back
           </Button>
           
           <h1 className="text-2xl font-bold">{currentSubject.title}</h1>
           
           <div className="flex items-center space-x-2">
+            <Button
+              variant="ghost"
+              size="sm"
+              className="text-gray-800 hover:bg-white hover:bg-opacity-20"
+              onClick={handleSubjectHelp}
+            >
+              <HelpCircle className="h-5 w-5" />
+            </Button>
+
             <Drawer>
               <DrawerTrigger asChild>
                 <Button
                   variant="ghost"
                   size="sm"
-                  className="text-gray-800 hover:bg-white hover:bg-opacity-20 min-w-[44px] min-h-[44px] flex items-center justify-center"
+                  className="text-gray-800 hover:bg-white hover:bg-opacity-20"
                 >
-                  ☰
+                  <Menu className="h-5 w-5" />
                 </Button>
               </DrawerTrigger>
               <DrawerContent>
@@ -147,6 +129,19 @@ const SubjectLearning = () => {
                       >
                         📞 Contact Support
                       </Button>
+
+                      <div className="border-t border-gray-200 my-4"></div>
+
+                      <Button
+                        variant="ghost"
+                        className="w-full justify-start text-left text-lg h-12 text-red-500"
+                        onClick={() => {
+                          logout();
+                          navigate("/");
+                        }}
+                      >
+                        Sign Out
+                      </Button>
                     </div>
                   </div>
                   
@@ -167,7 +162,7 @@ const SubjectLearning = () => {
               onClick={() => navigate("/profile")}
               className="w-8 h-8 bg-white bg-opacity-20 rounded-full flex items-center justify-center text-gray-800 font-bold hover:bg-opacity-30"
             >
-              👤
+              {user?.name ? user.name.charAt(0).toUpperCase() : <User className="h-5 w-5" />}
             </Button>
           </div>
         </div>
@@ -189,33 +184,52 @@ const SubjectLearning = () => {
 
       {/* Topics List */}
       <div className="px-6 py-8 space-y-4">
-        {filteredTopics.map((topic: any, index: number) => (
-          <div
-            key={index}
-            onClick={() => handleTopicClick(topic.name)}
-            className="bg-white rounded-2xl p-6 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 cursor-pointer border border-gray-100"
-          >
-            <div className="flex items-center justify-between">
-              <div className="flex-1">
-                <h3 className="text-lg font-bold text-gray-800 mb-2">
-                  {topic.name}
-                </h3>
-                <div className="flex items-center space-x-2">
-                  <div className="bg-gray-200 rounded-full h-2 flex-1">
-                    <div 
-                      className="bg-purple-600 h-2 rounded-full transition-all duration-300" 
-                      style={{width: `${topic.progress}%`}}
-                    ></div>
+        {isLoading ? (
+          <LoadingSpinner message={`Loading ${currentSubject.title.toLowerCase()} topics...`} />
+        ) : filteredTopics.length > 0 ? (
+          filteredTopics.map((topic, index) => (
+            <div
+              key={index}
+              onClick={() => handleTopicClick(topic.id)}
+              className="bg-white rounded-2xl p-6 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 cursor-pointer border border-gray-100 animate-fade-in"
+              style={{ animationDelay: `${index * 0.1}s` }}
+            >
+              <div className="flex items-center justify-between">
+                <div className="flex-1">
+                  <h3 className="text-lg font-bold text-gray-800 mb-2">
+                    {topic.name}
+                  </h3>
+                  <p className="text-gray-600 text-sm mb-3">
+                    {topic.description}
+                  </p>
+                  <div className="flex items-center space-x-2">
+                    <div className="bg-gray-200 rounded-full h-2 flex-1">
+                      <div 
+                        className="bg-purple-600 h-2 rounded-full transition-all duration-300" 
+                        style={{width: `${topic.progress}%`}}
+                      ></div>
+                    </div>
+                    <span className="text-xs text-gray-600">{topic.progress}%</span>
                   </div>
-                  <span className="text-xs text-gray-600">{topic.progress}%</span>
+                </div>
+                <div className="text-3xl ml-4">
+                  {topic.icon}
                 </div>
               </div>
-              <div className="text-3xl ml-4">
-                {topic.icon}
-              </div>
             </div>
+          ))
+        ) : (
+          <div className="text-center py-10">
+            <p className="text-gray-500">No topics found matching "{searchQuery}"</p>
+            <Button
+              variant="outline"
+              onClick={() => setSearchQuery("")}
+              className="mt-4"
+            >
+              Clear Search
+            </Button>
           </div>
-        ))}
+        )}
       </div>
 
       <NavigationBar currentPage="learn" />

@@ -1,34 +1,51 @@
 
 import { useParams, useNavigate } from "react-router-dom";
+import { useAuth } from "@/contexts/AuthContext";
+import { useToast } from "@/hooks/use-toast";
 
 const AccountSelection = () => {
   const { provider } = useParams<{ provider: string }>();
   const navigate = useNavigate();
+  const { loginWithProvider } = useAuth();
+  const { toast } = useToast();
 
   const accounts = {
     google: [
-      { name: "Iqbal Nadeem", email: "kbd123@gmail.com", color: "bg-purple-500" },
-      { name: "Minam Amir", email: "btmam321@gmail.com", color: "bg-green-500" },
-      { name: "Mehdi", email: "kthud.123@gmail.com", color: "bg-orange-500" },
-      { name: "Ali Zaidi", email: "az1179@gmail.com", color: "bg-red-500" }
+      { id: "g1", name: "Iqbal Nadeem", email: "kbd123@gmail.com", color: "bg-purple-500" },
+      { id: "g2", name: "Minam Amir", email: "btmam321@gmail.com", color: "bg-green-500" },
+      { id: "g3", name: "Mehdi", email: "kthud.123@gmail.com", color: "bg-orange-500" },
+      { id: "g4", name: "Ali Zaidi", email: "az1179@gmail.com", color: "bg-red-500" }
     ],
     facebook: [
-      { name: "Iqbal Nadeem", email: "kbd123@gmail.com", color: "bg-purple-500" },
-      { name: "Minam Amir", email: "btmam321@gmail.com", color: "bg-green-500" },
-      { name: "Ali Zaidi", email: "az1179@gmail.com", color: "bg-red-500" },
-      { name: "Wasaf Khan", email: "wasafkhan321@gmail.com", color: "bg-blue-500" }
+      { id: "f1", name: "Iqbal Nadeem", email: "kbd123@gmail.com", color: "bg-purple-500" },
+      { id: "f2", name: "Minam Amir", email: "btmam321@gmail.com", color: "bg-green-500" },
+      { id: "f3", name: "Ali Zaidi", email: "az1179@gmail.com", color: "bg-red-500" },
+      { id: "f4", name: "Wasaf Khan", email: "wasafkhan321@gmail.com", color: "bg-blue-500" }
     ],
     apple: [
-      { name: "Iqbal Nadeem", email: "kbd123@gmail.com", color: "bg-purple-500" },
-      { name: "Minam Amir", email: "btmam321@gmail.com", color: "bg-green-500" },
-      { name: "Mehdi", email: "kthud.123@gmail.com", color: "bg-orange-500" },
-      { name: "Ali Zaidi", email: "az1179@gmail.com", color: "bg-red-500" }
+      { id: "a1", name: "Iqbal Nadeem", email: "kbd123@gmail.com", color: "bg-purple-500" },
+      { id: "a2", name: "Minam Amir", email: "btmam321@gmail.com", color: "bg-green-500" },
+      { id: "a3", name: "Mehdi", email: "kthud.123@gmail.com", color: "bg-orange-500" },
+      { id: "a4", name: "Ali Zaidi", email: "az1179@gmail.com", color: "bg-red-500" }
     ]
   };
 
-  const currentAccounts = accounts[provider as keyof typeof accounts] || accounts.google;
+  const providerKey = (provider || "google") as keyof typeof accounts;
+  const currentAccounts = accounts[providerKey] || accounts.google;
 
-  const handleAccountSelect = () => {
+  const handleAccountSelect = (account: any) => {
+    loginWithProvider(providerKey, {
+      id: account.id,
+      name: account.name,
+      email: account.email,
+      username: account.email.split('@')[0],
+    });
+
+    toast({
+      title: "Signed in!",
+      description: `Welcome back, ${account.name}`,
+    });
+
     navigate("/dashboard");
   };
 
@@ -63,7 +80,7 @@ const AccountSelection = () => {
           {currentAccounts.map((account, index) => (
             <button
               key={index}
-              onClick={handleAccountSelect}
+              onClick={() => handleAccountSelect(account)}
               className="w-full flex items-center space-x-4 p-4 rounded-lg hover:bg-gray-50 transition-colors duration-200"
             >
               <div className={`w-12 h-12 ${account.color} rounded-full flex items-center justify-center text-white font-bold text-lg`}>
@@ -83,6 +100,15 @@ const AccountSelection = () => {
             <div className="flex-1 text-left">
               <p className="font-medium">Add New Account</p>
             </div>
+          </button>
+        </div>
+
+        <div className="mt-8 text-center">
+          <button
+            onClick={() => navigate("/")}
+            className="text-purple-600 font-medium hover:underline"
+          >
+            Back to login
           </button>
         </div>
       </div>

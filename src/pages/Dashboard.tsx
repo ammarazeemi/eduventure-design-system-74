@@ -1,53 +1,40 @@
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Drawer, DrawerClose, DrawerContent, DrawerTrigger } from "@/components/ui/drawer";
+import { useAuth } from "@/contexts/AuthContext";
+import { HelpCircle, Settings, MessageCircle, PhoneCall } from "lucide-react";
 import NavigationBar from "@/components/NavigationBar";
+import { subjects } from "@/data/educationalData";
+import LoadingSpinner from "@/components/LoadingSpinner";
 
 const Dashboard = () => {
   const navigate = useNavigate();
+  const { user, logout } = useAuth();
   const [searchQuery, setSearchQuery] = useState("");
+  const [isLoading, setIsLoading] = useState(true);
 
-  const subjects = [
-    {
-      title: "BIOLOGY",
-      subtitle: "Cells, Evolution, Microbes",
-      color: "from-green-300 to-green-400",
-      icon: "🧬",
-      path: "biology"
-    },
-    {
-      title: "MATHS",
-      subtitle: "Cross, Linear Equations, Probability",
-      color: "from-blue-300 to-blue-400",
-      icon: "📊",
-      path: "maths"
-    },
-    {
-      title: "GEOGRAPHY",
-      subtitle: "Natural Hazards & Eco Systems",
-      color: "from-emerald-300 to-emerald-400",
-      icon: "🌍",
-      path: "geography"
-    },
-    {
-      title: "CHEMISTRY",
-      subtitle: "Atoms, Molecules & Covalent Bonds",
-      color: "from-orange-300 to-orange-400",
-      icon: "⚛️",
-      path: "chemistry"
-    }
-  ];
+  // Simulate loading effect
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setIsLoading(false);
+    }, 800);
+    return () => clearTimeout(timer);
+  }, []);
 
   const filteredSubjects = subjects.filter(subject =>
     subject.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
     subject.subtitle.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
+  const handleHelpClick = () => {
+    navigate("/support");
+  };
+
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-white pb-20">
       {/* Purple Wave Background */}
       <div className="relative h-64 bg-gradient-to-br from-purple-600 to-purple-800 overflow-hidden">
         <div className="absolute inset-0">
@@ -64,16 +51,16 @@ const Dashboard = () => {
         <div className="relative z-10 flex items-center justify-between p-6 text-white">
           <Drawer>
             <DrawerTrigger asChild>
-              <Button variant="ghost" size="sm" className="text-white hover:bg-purple-700">
+              <Button variant="ghost" size="sm" className="text-white hover:bg-purple-700 min-w-[44px] min-h-[44px]">
                 ☰
               </Button>
             </DrawerTrigger>
             <DrawerContent>
               <div className="flex flex-col h-full">
                 <div className="flex-1 space-y-6 pt-6">
-                  <h2 className="text-2xl font-bold text-purple-800 mb-8">Menu</h2>
+                  <h2 className="text-2xl font-bold text-purple-800 mb-8 px-6">Menu</h2>
                   
-                  <div className="space-y-4">
+                  <div className="space-y-4 px-6">
                     <Button
                       variant="ghost"
                       className="w-full justify-start text-left text-lg h-12"
@@ -87,7 +74,8 @@ const Dashboard = () => {
                       className="w-full justify-start text-left text-lg h-12"
                       onClick={() => navigate("/settings")}
                     >
-                      ⚙️ Settings
+                      <Settings className="mr-2 h-5 w-5" />
+                      Settings
                     </Button>
                     
                     <Button
@@ -95,7 +83,8 @@ const Dashboard = () => {
                       className="w-full justify-start text-left text-lg h-12"
                       onClick={() => navigate("/feedback")}
                     >
-                      💬 Feedback
+                      <MessageCircle className="mr-2 h-5 w-5" />
+                      Feedback
                     </Button>
                     
                     <Button
@@ -103,7 +92,21 @@ const Dashboard = () => {
                       className="w-full justify-start text-left text-lg h-12"
                       onClick={() => navigate("/support")}
                     >
-                      📞 Contact Support
+                      <PhoneCall className="mr-2 h-5 w-5" />
+                      Contact Support
+                    </Button>
+
+                    <div className="border-t border-gray-200 my-4"></div>
+
+                    <Button
+                      variant="ghost"
+                      className="w-full justify-start text-left text-lg h-12 text-red-500"
+                      onClick={() => {
+                        logout();
+                        navigate("/");
+                      }}
+                    >
+                      Sign Out
                     </Button>
                   </div>
                 </div>
@@ -125,10 +128,10 @@ const Dashboard = () => {
             <Button
               variant="ghost"
               size="sm"
-              className="text-white hover:bg-purple-700"
-              onClick={() => {/* Show hints */}}
+              className="text-white hover:bg-purple-700 min-w-[44px] min-h-[44px] flex items-center justify-center"
+              onClick={handleHelpClick}
             >
-              ❓
+              <HelpCircle className="h-5 w-5" />
             </Button>
             <Button
               variant="ghost"
@@ -136,14 +139,14 @@ const Dashboard = () => {
               onClick={() => navigate("/profile")}
               className="w-8 h-8 bg-purple-300 rounded-full flex items-center justify-center text-purple-800 font-bold hover:bg-purple-200"
             >
-              U
+              {user?.name ? user.name.charAt(0).toUpperCase() : "U"}
             </Button>
           </div>
         </div>
 
         <div className="relative z-10 px-6 pb-8">
           <p className="text-purple-200 text-lg">
-            Hello, User – great to see you again!
+            {user?.name ? `Hello, ${user.name} – great to see you again!` : "Hello – great to see you again!"}
           </p>
         </div>
       </div>
@@ -160,33 +163,44 @@ const Dashboard = () => {
 
       {/* Subject Cards */}
       <div className="px-6 py-8 space-y-4">
-        {filteredSubjects.map((subject, index) => (
-          <button
-            key={index}
-            onClick={() => navigate(`/learn/${subject.path}`)}
-            className={`w-full bg-gradient-to-r ${subject.color} rounded-2xl p-6 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105`}
-          >
-            <div className="flex items-center justify-between">
-              <div className="text-left">
-                <h3 className="text-xl font-bold text-gray-800 mb-1">
-                  {subject.title}
-                </h3>
-                <p className="text-gray-600 text-sm">
-                  {subject.subtitle}
-                </p>
-                <div className="mt-2">
-                  <div className="bg-white bg-opacity-50 rounded-full h-2 w-24">
-                    <div className="bg-purple-600 h-2 rounded-full" style={{width: `${Math.floor(Math.random() * 80) + 20}%`}}></div>
+        {isLoading ? (
+          <LoadingSpinner message="Loading subjects..." />
+        ) : filteredSubjects.length > 0 ? (
+          filteredSubjects.map((subject, index) => (
+            <button
+              key={index}
+              onClick={() => navigate(`/learn/${subject.path}`)}
+              className={`w-full bg-gradient-to-r ${subject.color} rounded-2xl p-6 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105`}
+            >
+              <div className="flex items-center justify-between">
+                <div className="text-left">
+                  <h3 className="text-xl font-bold text-gray-800 mb-1">
+                    {subject.title}
+                  </h3>
+                  <p className="text-gray-600 text-sm">
+                    {subject.subtitle}
+                  </p>
+                  <div className="mt-2">
+                    <div className="bg-white bg-opacity-50 rounded-full h-2 w-24">
+                      <div 
+                        className="bg-purple-600 h-2 rounded-full" 
+                        style={{width: `${Math.floor(Math.random() * 80) + 20}%`}}
+                      ></div>
+                    </div>
+                    <p className="text-xs text-gray-700 mt-1">Progress</p>
                   </div>
-                  <p className="text-xs text-gray-700 mt-1">Progress</p>
+                </div>
+                <div className="text-4xl">
+                  {subject.icon}
                 </div>
               </div>
-              <div className="text-4xl">
-                {subject.icon}
-              </div>
-            </div>
-          </button>
-        ))}
+            </button>
+          ))
+        ) : (
+          <div className="text-center py-8">
+            <p className="text-gray-500">No subjects found matching "{searchQuery}"</p>
+          </div>
+        )}
       </div>
 
       <NavigationBar currentPage="learn" />

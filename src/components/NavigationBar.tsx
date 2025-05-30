@@ -1,5 +1,6 @@
 
 import { useNavigate } from "react-router-dom";
+import { Book, Compass, Award, User } from "lucide-react";
 
 interface NavigationBarProps {
   currentPage: string;
@@ -9,14 +10,14 @@ const NavigationBar = ({ currentPage }: NavigationBarProps) => {
   const navigate = useNavigate();
 
   const navItems = [
-    { id: "learn", label: "Learn", icon: "📚", path: "/dashboard" },
-    { id: "explore", label: "Explore", icon: "🧭", path: "/explore" },
-    { id: "quiz", label: "Quiz", icon: "🎲", path: "/quiz" },
-    { id: "profile", label: "Profile", icon: "👤", path: "/profile" }
+    { id: "learn", label: "Learn", icon: Book, path: "/dashboard" },
+    { id: "explore", label: "Explore", icon: Compass, path: "/explore" },
+    { id: "quiz", label: "Quiz", icon: Award, path: "/quiz" },
+    { id: "profile", label: "Profile", icon: User, path: "/profile" }
   ];
 
   return (
-    <div className="fixed bottom-0 left-0 right-0 bg-purple-100 border-t border-purple-200 px-4 py-2 rounded-t-3xl">
+    <div className="fixed bottom-0 left-0 right-0 bg-white border-t border-purple-200 px-4 py-2 shadow-lg z-40">
       <div className="flex justify-around items-center max-w-md mx-auto">
         {navItems.map((item) => (
           <button
@@ -24,11 +25,11 @@ const NavigationBar = ({ currentPage }: NavigationBarProps) => {
             onClick={() => navigate(item.path)}
             className={`flex flex-col items-center py-2 px-3 rounded-lg transition-colors duration-200 ${
               currentPage === item.id
-                ? "bg-purple-200 text-purple-800"
-                : "text-purple-600 hover:bg-purple-50"
+                ? "bg-purple-100 text-purple-800"
+                : "text-gray-500 hover:bg-purple-50"
             }`}
           >
-            <span className="text-lg mb-1">{item.icon}</span>
+            <item.icon className="h-5 w-5 mb-1" />
             <span className="text-xs font-medium">{item.label}</span>
           </button>
         ))}

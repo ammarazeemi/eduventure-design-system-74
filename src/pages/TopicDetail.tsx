@@ -1,94 +1,147 @@
 
+import { useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
-import { Progress } from "@/components/ui/progress";
+import { subjects } from "@/data/educationalData";
+import { ChevronLeft } from "lucide-react";
+import MarkdownContent from "@/components/MarkdownContent";
 
 const TopicDetail = () => {
-  const { subject, topic } = useParams<{ subject: string; topic: string }>();
+  const { subject: subjectId, topic: topicId } = useParams<{ subject: string; topic: string }>();
   const navigate = useNavigate();
-  const decodedTopic = decodeURIComponent(topic || "");
+  const [activeTab, setActiveTab] = useState("reading");
+  
+  const subject = subjects.find(s => s.id === subjectId);
+  const topic = subject?.topics.find(t => t.id === topicId);
 
-  const progressValue = Math.floor(Math.random() * 80) + 10; // Random progress for demo
+  if (!subject || !topic) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="text-center">
+          <h1 className="text-2xl font-bold text-red-600 mb-4">Topic Not Found</h1>
+          <Button onClick={() => navigate("/dashboard")}>Return to Dashboard</Button>
+        </div>
+      </div>
+    );
+  }
 
   return (
-    <div className="min-h-screen bg-white">
-      {/* Purple Wave Background */}
-      <div className="relative h-64 bg-gradient-to-br from-purple-600 to-purple-800 overflow-hidden">
-        <div className="absolute inset-0">
-          <svg viewBox="0 0 1440 320" className="absolute bottom-0 w-full h-full">
-            <path
-              fill="white"
-              fillOpacity="1"
-              d="M0,96L48,112C96,128,192,160,288,160C384,160,480,128,576,112C672,96,768,96,864,112C960,128,1056,160,1152,160C1248,160,1344,128,1392,112L1440,96L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"
-            ></path>
-          </svg>
-        </div>
-        
-        {/* Header */}
-        <div className="relative z-10 flex items-center justify-between p-6 text-white">
+    <div className="min-h-screen bg-white pb-6">
+      {/* Header */}
+      <div className={`bg-gradient-to-r ${subject.color} p-6`}>
+        <div className="flex items-center justify-between mb-4">
           <Button
             variant="ghost"
             size="sm"
-            onClick={() => navigate(`/learn/${subject}`)}
-            className="text-white hover:bg-purple-700"
+            onClick={() => navigate(`/learn/${subject.id}`)}
+            className="text-gray-800 hover:bg-white hover:bg-opacity-20"
           >
-            ← Back
+            <ChevronLeft className="h-5 w-5 mr-1" />
+            Back
           </Button>
-          <div className="w-8 h-8 bg-purple-300 rounded-full flex items-center justify-center">
-            <span className="text-purple-800 font-bold">U</span>
-          </div>
+          <h1 className="text-xl font-bold text-gray-800">{topic.name}</h1>
+          <div className="w-10"></div> {/* Spacer for alignment */}
         </div>
-
-        <div className="relative z-10 px-6 pb-8">
-          <h1 className="text-3xl font-bold text-white mb-2">
-            {decodedTopic}
-          </h1>
+        <div className="flex items-center justify-center">
+          <span className="text-4xl">{topic.icon}</span>
         </div>
       </div>
 
-      {/* Content */}
-      <div className="px-6 py-8 space-y-6">
-        {/* Progress Bar */}
-        <div className="space-y-2">
-          <div className="flex justify-between text-sm text-gray-600">
-            <span>Progress</span>
-            <span>{progressValue}%</span>
-          </div>
-          <Progress value={progressValue} className="h-3" />
-        </div>
-
-        {/* Learning Options */}
-        <div className="space-y-4">
-          <h2 className="text-xl font-bold text-gray-800 mb-4">Choose Your Learning Method</h2>
+      {/* Tabs */}
+      <div className="px-4 pt-4">
+        <Tabs defaultValue="reading" value={activeTab} onValueChange={setActiveTab} className="w-full">
+          <TabsList className="grid grid-cols-2 mb-6 w-full">
+            <TabsTrigger value="reading" className="text-md font-medium">Learn by Reading</TabsTrigger>
+            <TabsTrigger value="video" className="text-md font-medium">Learn with Video</TabsTrigger>
+          </TabsList>
           
-          <Button
-            onClick={() => navigate(`/learn/reading/${subject}/${encodeURIComponent(decodedTopic)}`)}
-            className="w-full h-20 bg-gradient-to-r from-blue-400 to-blue-500 hover:from-blue-500 hover:to-blue-600 text-white text-lg font-semibold rounded-xl shadow-lg"
-          >
-            <div className="flex items-center justify-center space-x-3">
-              <span className="text-2xl">📖</span>
-              <span>Learn by Reading</span>
+          <TabsContent value="reading" className="space-y-4">
+            <div className="bg-white rounded-lg shadow p-4">
+              <MarkdownContent content={topic.readingContent} />
+              
+              <div className="mt-8 flex justify-center">
+                <Button
+                  onClick={() => navigate(`/learn/reading/${subject.id}/${topic.id}`)}
+                  className="bg-purple-600 hover:bg-purple-700 text-white px-6"
+                >
+                  Continue Reading
+                </Button>
+              </div>
             </div>
-          </Button>
+          </TabsContent>
+          
+          <TabsContent value="video" className="space-y-4">
+            <div className="bg-white rounded-lg shadow p-4">
+              <div className="aspect-w-16 aspect-h-9 mb-4">
+                <iframe 
+                  src={topic.videoUrl} 
+                  title={`${topic.name} Video`}
+                  className="w-full h-64 rounded-lg"
+                  frameBorder="0"
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                  allowFullScreen
+                ></iframe>
+              </div>
+              
+              <h3 className="text-lg font-semibold mt-4">{topic.name} Video Lesson</h3>
+              <p className="text-gray-600 mt-2">
+                This video covers the key concepts of {topic.name.toLowerCase()}.
+              </p>
+              
+              <div className="mt-6 flex justify-center">
+                <Button
+                  onClick={() => navigate(`/learn/video/${subject.id}/${topic.id}`)}
+                  className="bg-purple-600 hover:bg-purple-700 text-white px-6"
+                >
+                  Full Video Lesson
+                </Button>
+              </div>
+            </div>
+          </TabsContent>
+        </Tabs>
+      </div>
 
-          <Button
-            onClick={() => navigate(`/learn/video/${subject}/${encodeURIComponent(decodedTopic)}`)}
-            className="w-full h-20 bg-gradient-to-r from-red-400 to-red-500 hover:from-red-500 hover:to-red-600 text-white text-lg font-semibold rounded-xl shadow-lg"
-          >
-            <div className="flex items-center justify-center space-x-3">
-              <span className="text-2xl">📺</span>
-              <span>Learn with Video</span>
-            </div>
-          </Button>
+      {/* Related Topics */}
+      <div className="px-4 py-6">
+        <h2 className="text-lg font-bold mb-4">Related Topics</h2>
+        <div className="grid grid-cols-2 gap-3">
+          {subject.topics
+            .filter(t => t.id !== topic.id)
+            .slice(0, 4)
+            .map((relatedTopic, index) => (
+              <Button
+                key={index}
+                variant="outline"
+                onClick={() => navigate(`/topic/${subject.id}/${relatedTopic.id}`)}
+                className="text-left justify-start h-auto p-3 border-gray-200 hover:border-purple-300"
+              >
+                <div className="mr-2">{relatedTopic.icon}</div>
+                <span className="truncate">{relatedTopic.name}</span>
+              </Button>
+            ))}
         </div>
+      </div>
 
-        {/* Topic Overview */}
-        <div className="bg-gradient-to-r from-purple-50 to-purple-100 rounded-xl p-6 mt-8">
-          <h3 className="text-lg font-semibold text-gray-800 mb-3">About This Topic</h3>
-          <p className="text-gray-600 leading-relaxed">
-            Explore {decodedTopic} through interactive content, engaging videos, and comprehensive reading materials. 
-            Track your progress as you master the fundamentals and advance to more complex concepts.
-          </p>
+      {/* Navigation buttons */}
+      <div className="px-4 py-6">
+        <div className="flex justify-between">
+          <Button
+            variant="outline"
+            onClick={() => navigate(`/learn/${subject.id}`)}
+            className="border-gray-200 hover:border-purple-300"
+          >
+            <ChevronLeft className="h-4 w-4 mr-1" />
+            All Topics
+          </Button>
+          
+          <Button 
+            onClick={() => navigate(`/quiz/${subject.id}/${topic.id}`)}
+            className="bg-purple-600 hover:bg-purple-700 text-white"
+          >
+            Take a Quiz
+            <span className="ml-2">🎲</span>
+          </Button>
         </div>
       </div>
     </div>
