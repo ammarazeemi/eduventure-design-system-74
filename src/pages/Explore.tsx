@@ -1,19 +1,28 @@
 
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { Input } from "@/components/ui/input";
 import NavigationBar from "@/components/NavigationBar";
 
 const Explore = () => {
+  const [searchQuery, setSearchQuery] = useState("");
+  const navigate = useNavigate();
+
   const subjects = [
-    { name: "Biology", icon: "🧬", color: "from-green-300 to-green-400" },
-    { name: "Maths", icon: "📊", color: "from-blue-300 to-blue-400" },
-    { name: "Chemistry", icon: "⚛️", color: "from-orange-300 to-orange-400" },
-    { name: "Geography", icon: "🌍", color: "from-emerald-300 to-emerald-400" },
-    { name: "English", icon: "📚", color: "from-pink-300 to-pink-400" },
-    { name: "Physics", icon: "⚡", color: "from-yellow-300 to-yellow-400" },
-    { name: "Computer Science", icon: "💻", color: "from-indigo-300 to-indigo-400" },
-    { name: "History", icon: "🏛️", color: "from-red-300 to-red-400" },
-    { name: "Environmental Science", icon: "🌱", color: "from-teal-300 to-teal-400" }
+    { name: "Biology", icon: "🧬", color: "from-green-300 to-green-400", path: "biology" },
+    { name: "Maths", icon: "📊", color: "from-blue-300 to-blue-400", path: "maths" },
+    { name: "Chemistry", icon: "⚛️", color: "from-orange-300 to-orange-400", path: "chemistry" },
+    { name: "Geography", icon: "🌍", color: "from-emerald-300 to-emerald-400", path: "geography" },
+    { name: "English", icon: "📚", color: "from-pink-300 to-pink-400", path: "english" },
+    { name: "Physics", icon: "⚡", color: "from-yellow-300 to-yellow-400", path: "physics" },
+    { name: "Computer Science", icon: "💻", color: "from-indigo-300 to-indigo-400", path: "computer-science" },
+    { name: "History", icon: "🏛️", color: "from-red-300 to-red-400", path: "history" },
+    { name: "Environmental Science", icon: "🌱", color: "from-teal-300 to-teal-400", path: "environmental-science" }
   ];
+
+  const filteredSubjects = subjects.filter(subject =>
+    subject.name.toLowerCase().includes(searchQuery.toLowerCase())
+  );
 
   return (
     <div className="min-h-screen bg-white pb-20">
@@ -38,15 +47,18 @@ const Explore = () => {
       <div className="px-6 -mt-8 relative z-20">
         <Input
           placeholder="Search subjects..."
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
           className="w-full bg-white shadow-lg rounded-lg border-0 py-3 px-4"
         />
       </div>
 
       {/* Subjects Grid */}
       <div className="px-6 py-8 grid grid-cols-2 gap-4">
-        {subjects.map((subject, index) => (
+        {filteredSubjects.map((subject, index) => (
           <div
             key={index}
+            onClick={() => navigate(`/learn/${subject.path}`)}
             className={`bg-gradient-to-r ${subject.color} rounded-2xl p-4 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 cursor-pointer`}
           >
             <div className="text-center">

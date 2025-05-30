@@ -1,16 +1,29 @@
 
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { Input } from "@/components/ui/input";
 import NavigationBar from "@/components/NavigationBar";
 
 const Quiz = () => {
+  const [searchQuery, setSearchQuery] = useState("");
+  const navigate = useNavigate();
+
   const quizzes = [
-    { name: "Algebra Quiz", icon: "🔢", score: "Last Score: 85%", color: "from-blue-300 to-blue-400" },
-    { name: "Cell Biology Quiz", icon: "🧬", score: "Last Score: 92%", color: "from-green-300 to-green-400" },
-    { name: "Volcanoes Quiz", icon: "🌋", score: "Last Score: 78%", color: "from-red-300 to-red-400" },
-    { name: "Periodic Table Quiz", icon: "⚛️", score: "Last Score: 88%", color: "from-orange-300 to-orange-400" },
-    { name: "Geography Quiz", icon: "🌍", score: "New Quiz!", color: "from-emerald-300 to-emerald-400" },
-    { name: "Number Theory Quiz", icon: "📊", score: "Last Score: 95%", color: "from-purple-300 to-purple-400" }
+    { name: "Algebra Quiz", icon: "🔢", score: "Last Score: 85%", color: "from-blue-300 to-blue-400", subject: "algebra" },
+    { name: "Cell Biology Quiz", icon: "🧬", score: "Last Score: 92%", color: "from-green-300 to-green-400", subject: "cell-biology" },
+    { name: "Volcanoes Quiz", icon: "🌋", score: "Last Score: 78%", color: "from-red-300 to-red-400", subject: "volcanoes" },
+    { name: "Periodic Table Quiz", icon: "⚛️", score: "Last Score: 88%", color: "from-orange-300 to-orange-400", subject: "periodic-table" },
+    { name: "Geography Quiz", icon: "🌍", score: "New Quiz!", color: "from-emerald-300 to-emerald-400", subject: "geography" },
+    { name: "Number Theory Quiz", icon: "📊", score: "Last Score: 95%", color: "from-purple-300 to-purple-400", subject: "number-theory" }
   ];
+
+  const filteredQuizzes = quizzes.filter(quiz =>
+    quiz.name.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+
+  const handleQuizClick = (quizSubject: string) => {
+    navigate(`/quiz/${quizSubject}`);
+  };
 
   return (
     <div className="min-h-screen bg-white pb-20">
@@ -36,15 +49,18 @@ const Quiz = () => {
       <div className="px-6 -mt-8 relative z-20">
         <Input
           placeholder="Search quizzes..."
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
           className="w-full bg-white shadow-lg rounded-lg border-0 py-3 px-4"
         />
       </div>
 
       {/* Quizzes List */}
       <div className="px-6 py-8 space-y-4">
-        {quizzes.map((quiz, index) => (
+        {filteredQuizzes.map((quiz, index) => (
           <div
             key={index}
+            onClick={() => handleQuizClick(quiz.subject)}
             className={`bg-gradient-to-r ${quiz.color} rounded-2xl p-4 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 cursor-pointer`}
           >
             <div className="flex items-center justify-between">

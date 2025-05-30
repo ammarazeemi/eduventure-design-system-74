@@ -1,7 +1,16 @@
 
+import { useState } from "react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Switch } from "@/components/ui/switch";
 import NavigationBar from "@/components/NavigationBar";
 
 const Profile = () => {
+  const [soundEffects, setSoundEffects] = useState(false);
+  const [notifications, setNotifications] = useState(true);
+  const [showFeedbackForm, setShowFeedbackForm] = useState(false);
+  const [feedback, setFeedback] = useState("");
+
   const achievements = [
     { name: "Math Master", percentage: 95, badge: "🏆" },
     { name: "Biology Expert", percentage: 88, badge: "🧬" },
@@ -15,6 +24,15 @@ const Profile = () => {
     { name: "Chemistry", progress: 60, color: "bg-orange-500" },
     { name: "Geography", progress: 45, color: "bg-emerald-500" }
   ];
+
+  const handleFeedbackSubmit = () => {
+    if (feedback.trim()) {
+      // In a real app, this would send to a backend
+      alert("Thank you for your feedback! We appreciate your input.");
+      setFeedback("");
+      setShowFeedbackForm(false);
+    }
+  };
 
   return (
     <div className="min-h-screen bg-white pb-20">
@@ -97,16 +115,18 @@ const Profile = () => {
           </h2>
           <div className="space-y-3">
             <div className="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
-              <span className="text-gray-800">Notifications</span>
-              <div className="w-12 h-6 bg-purple-500 rounded-full relative">
-                <div className="w-5 h-5 bg-white rounded-full absolute right-0.5 top-0.5"></div>
-              </div>
+              <span className="text-gray-800 font-medium">Notifications</span>
+              <Switch
+                checked={notifications}
+                onCheckedChange={setNotifications}
+              />
             </div>
             <div className="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
-              <span className="text-gray-800">Sound Effects</span>
-              <div className="w-12 h-6 bg-gray-300 rounded-full relative">
-                <div className="w-5 h-5 bg-white rounded-full absolute left-0.5 top-0.5"></div>
-              </div>
+              <span className="text-gray-800 font-medium">Sound Effects</span>
+              <Switch
+                checked={soundEffects}
+                onCheckedChange={setSoundEffects}
+              />
             </div>
           </div>
         </div>
@@ -117,9 +137,44 @@ const Profile = () => {
             <span className="mr-2">💬</span>
             Help & Feedback
           </h2>
-          <button className="w-full bg-purple-100 hover:bg-purple-200 text-purple-800 font-medium py-3 rounded-lg transition-colors duration-200">
-            Send Feedback
-          </button>
+          
+          {!showFeedbackForm ? (
+            <Button 
+              onClick={() => setShowFeedbackForm(true)}
+              className="w-full bg-purple-600 hover:bg-purple-700 text-white font-medium py-3 rounded-lg transition-colors duration-200"
+            >
+              Send Feedback
+            </Button>
+          ) : (
+            <div className="space-y-4 p-4 bg-gray-50 rounded-lg">
+              <h3 className="font-semibold text-gray-800">We'd love to hear from you!</h3>
+              <textarea
+                value={feedback}
+                onChange={(e) => setFeedback(e.target.value)}
+                placeholder="Tell us what you think about Eduventure..."
+                className="w-full p-3 border border-gray-300 rounded-lg resize-none h-32 focus:outline-none focus:ring-2 focus:ring-purple-500"
+              />
+              <div className="flex space-x-3">
+                <Button 
+                  onClick={handleFeedbackSubmit}
+                  className="flex-1 bg-purple-600 hover:bg-purple-700"
+                  disabled={!feedback.trim()}
+                >
+                  Submit
+                </Button>
+                <Button 
+                  onClick={() => {
+                    setShowFeedbackForm(false);
+                    setFeedback("");
+                  }}
+                  variant="outline"
+                  className="flex-1"
+                >
+                  Cancel
+                </Button>
+              </div>
+            </div>
+          )}
         </div>
       </div>
 

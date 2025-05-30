@@ -1,4 +1,5 @@
 
+import { useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -7,24 +8,48 @@ import NavigationBar from "@/components/NavigationBar";
 const SubjectLearning = () => {
   const { subject } = useParams<{ subject: string }>();
   const navigate = useNavigate();
+  const [searchQuery, setSearchQuery] = useState("");
 
   const topicsData = {
+    biology: [
+      "Cells", "Evolution", "Microbes", "Genetics", "DNA & RNA", "Human Body"
+    ],
     maths: [
       "Number Theory", "Integration", "Probability & Stats", "Discrete Maths"
     ],
-    biology: [
-      "Cells", "Evolution", "Microbes", "Genetics", "DNA & RNA", "Human Body", "Photosynthesis", "Reproduction"
+    chemistry: [
+      "Atoms", "Molecules", "Chemical Bonding", "Periodic Table", "States of Matter", "Acids & Bases", "Reactions", "Lab Safety"
     ],
     geography: [
       "Ecosystems", "Countries", "Volcanoes", "Climates", "Earth Layers", "Maps & Coordinates", "Natural Disasters"
     ],
-    chemistry: [
-      "Atoms", "Molecules", "Chemical Bonding", "Periodic Table", "States of Matter", "Acids & Bases", "Reactions", "Lab Safety"
+    english: [
+      "Grammar", "Literature", "Creative Writing", "Poetry", "Reading Comprehension"
+    ],
+    physics: [
+      "Motion", "Forces", "Energy", "Waves", "Electricity"
+    ],
+    "computer-science": [
+      "Programming", "Algorithms", "Data Structures", "Web Development"
+    ],
+    history: [
+      "Ancient Civilizations", "World Wars", "Renaissance", "Industrial Revolution"
+    ],
+    "environmental-science": [
+      "Climate Change", "Biodiversity", "Pollution", "Conservation", "Renewable Energy"
     ]
   };
 
   const topics = topicsData[subject as keyof typeof topicsData] || [];
-  const subjectTitle = subject?.charAt(0).toUpperCase() + subject?.slice(1);
+  const subjectTitle = subject?.split('-').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
+
+  const filteredTopics = topics.filter(topic =>
+    topic.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+
+  const handleTopicClick = (topic: string) => {
+    navigate(`/topic/${subject}/${encodeURIComponent(topic)}`);
+  };
 
   return (
     <div className="min-h-screen bg-white pb-20">
@@ -66,16 +91,19 @@ const SubjectLearning = () => {
       <div className="px-6 -mt-8 relative z-20">
         <Input
           placeholder={`Search ${subject} topics...`}
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
           className="w-full bg-white shadow-lg rounded-lg border-0 py-3 px-4"
         />
       </div>
 
       {/* Topics List */}
       <div className="px-6 py-8 space-y-4">
-        {topics.map((topic, index) => (
+        {filteredTopics.map((topic, index) => (
           <div
             key={index}
-            className="bg-gradient-to-r from-purple-100 to-purple-200 rounded-xl p-4 shadow-md hover:shadow-lg transition-shadow duration-200"
+            onClick={() => handleTopicClick(topic)}
+            className="bg-gradient-to-r from-purple-100 to-purple-200 rounded-xl p-4 shadow-md hover:shadow-lg transition-all duration-200 cursor-pointer hover:scale-105"
           >
             <div className="flex items-center justify-between">
               <div>
@@ -84,10 +112,15 @@ const SubjectLearning = () => {
                 </h3>
               </div>
               <div className="text-2xl">
-                {subject === "maths" && "📊"}
                 {subject === "biology" && "🧬"}
-                {subject === "geography" && "🌍"}
+                {subject === "maths" && "📊"}
                 {subject === "chemistry" && "⚛️"}
+                {subject === "geography" && "🌍"}
+                {subject === "english" && "📚"}
+                {subject === "physics" && "⚡"}
+                {subject === "computer-science" && "💻"}
+                {subject === "history" && "🏛️"}
+                {subject === "environmental-science" && "🌱"}
               </div>
             </div>
           </div>

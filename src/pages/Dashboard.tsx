@@ -1,10 +1,12 @@
 
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Input } from "@/components/ui/input";
 import NavigationBar from "@/components/NavigationBar";
 
 const Dashboard = () => {
   const navigate = useNavigate();
+  const [searchQuery, setSearchQuery] = useState("");
 
   const subjects = [
     {
@@ -36,6 +38,11 @@ const Dashboard = () => {
       path: "chemistry"
     }
   ];
+
+  const filteredSubjects = subjects.filter(subject =>
+    subject.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    subject.subtitle.toLowerCase().includes(searchQuery.toLowerCase())
+  );
 
   return (
     <div className="min-h-screen bg-white">
@@ -71,13 +78,15 @@ const Dashboard = () => {
       <div className="px-6 -mt-8 relative z-20">
         <Input
           placeholder="Search subjects..."
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
           className="w-full bg-white shadow-lg rounded-lg border-0 py-3 px-4"
         />
       </div>
 
       {/* Subject Cards */}
       <div className="px-6 py-8 space-y-4">
-        {subjects.map((subject, index) => (
+        {filteredSubjects.map((subject, index) => (
           <button
             key={index}
             onClick={() => navigate(`/learn/${subject.path}`)}
