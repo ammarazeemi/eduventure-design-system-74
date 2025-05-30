@@ -2,81 +2,123 @@
 import { useParams, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
-import { Drawer, DrawerClose, DrawerContent, DrawerTrigger } from "@/components/ui/drawer";
+import { subjects } from "@/data/educationalData";
+import { ChevronLeft, Play } from "lucide-react";
 
 const VideoLearning = () => {
-  const { subject, topic } = useParams<{ subject: string; topic: string }>();
+  const { subject: subjectId, topic: topicId } = useParams<{ subject: string; topic: string }>();
   const navigate = useNavigate();
-  const decodedTopic = decodeURIComponent(topic || "");
 
-  const videoContent: { [key: string]: any } = {
-    "biology-cells": {
-      title: "Learn: Cells",
-      videos: [
+  const subject = subjects.find(s => s.id === subjectId);
+  const topic = subject?.topics.find(t => t.id === topicId);
+
+  if (!subject || !topic) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="text-center">
+          <h1 className="text-2xl font-bold text-red-600 mb-4">Topic Not Found</h1>
+          <Button onClick={() => navigate("/dashboard")}>Return to Dashboard</Button>
+        </div>
+      </div>
+    );
+  }
+
+  // Topic-specific video content based on subject and topic
+  const getTopicVideos = () => {
+    const contentKey = `${subject.id}-${topic.id}`;
+    
+    // Subject and topic-specific video mappings
+    const videoMappings: { [key: string]: any[] } = {
+      "mathematics-algebra": [
         {
-          title: "Cell Structure and Function - Introduction",
-          duration: "8:30",
-          thumbnail: "🔬",
-          description: "A comprehensive introduction to cell biology covering basic structure and organelle functions.",
-          videoId: "URUJD5NEXC8" // Real cell biology video
+          title: "Algebra Fundamentals",
+          duration: "12:30",
+          description: "Introduction to algebraic concepts, variables, and basic equations specific to algebra learning.",
+          videoId: "NybHckSEQBI"
         },
         {
-          title: "Mitochondria - The Powerhouse of the Cell",
-          duration: "6:15",
-          thumbnail: "⚡",
-          description: "Deep dive into mitochondrial structure and energy production in cells.",
+          title: "Solving Linear Equations",
+          duration: "8:45",
+          description: "Step-by-step guide to solving linear algebraic equations with examples.",
+          videoId: "9Vmwsg8Ecy4"
+        }
+      ],
+      "mathematics-geometry": [
+        {
+          title: "Geometry Basics",
+          duration: "10:15",
+          description: "Understanding shapes, angles, and geometric principles.",
+          videoId: "URUJD5NEXC8"
+        }
+      ],
+      "biology-cells": [
+        {
+          title: "Cell Structure and Function",
+          duration: "15:20",
+          description: "Comprehensive overview of cell biology, organelles, and cellular processes.",
+          videoId: "URUJD5NEXC8"
+        },
+        {
+          title: "Cell Division Process",
+          duration: "11:30",
+          description: "Understanding mitosis and meiosis in cellular reproduction.",
           videoId: "VFJlUYuy7WY"
         }
-      ]
-    },
-    "geography-volcanoes": {
-      title: "Learn: Volcanoes",
-      videos: [
+      ],
+      "biology-ecosystems": [
         {
-          title: "How Volcanoes Form and Erupt",
-          duration: "10:45",
-          thumbnail: "🌋",
-          description: "Understanding volcanic formation, types, and eruption processes.",
+          title: "Ecosystem Dynamics",
+          duration: "13:45",
+          description: "How organisms interact within their environment and ecosystem balance.",
           videoId: "yoSEJ3oR-p4"
-        },
+        }
+      ],
+      "chemistry-periodic-table": [
         {
-          title: "The Ring of Fire - Pacific Volcanic Activity",
-          duration: "7:20",
-          thumbnail: "🔥",
-          description: "Exploring the Pacific Ring of Fire and its geological significance.",
+          title: "Periodic Table Organization",
+          duration: "14:20",
+          description: "Understanding element organization and periodic trends in chemistry.",
+          videoId: "0RRVV4Diomg"
+        }
+      ],
+      "chemistry-chemical-reactions": [
+        {
+          title: "Chemical Reactions Explained",
+          duration: "12:10",
+          description: "Types of chemical reactions and how they occur.",
+          videoId: "UwbRp6_NpMw"
+        }
+      ],
+      "geography-continents": [
+        {
+          title: "World Continents Overview",
+          duration: "16:30",
+          description: "Geographical features and characteristics of world continents.",
+          videoId: "yoSEJ3oR-p4"
+        }
+      ],
+      "geography-volcanoes": [
+        {
+          title: "Volcanic Formation and Activity",
+          duration: "11:40",
+          description: "How volcanoes form and the science behind volcanic eruptions.",
           videoId: "UwbRp6_NpMw"
         }
       ]
-    },
-    "chemistry-periodic-table": {
-      title: "Learn: Periodic Table",
-      videos: [
-        {
-          title: "Periodic Table Organization and Trends",
-          duration: "12:30",
-          thumbnail: "⚛️",
-          description: "Understanding how elements are organized and periodic trends.",
-          videoId: "0RRVV4Diomg"
-        }
-      ]
-    }
-  };
+    };
 
-  const contentKey = `${subject}-${decodedTopic.toLowerCase().replace(/ /g, '-')}`;
-  const currentContent = videoContent[contentKey] || {
-    title: `Learn: ${decodedTopic}`,
-    videos: [
+    return videoMappings[contentKey] || [
       {
-        title: `${decodedTopic} - Introduction`,
-        duration: "5:30",
-        thumbnail: "🎬",
-        description: `A comprehensive introduction to ${decodedTopic} covering the basic concepts and fundamentals.`,
-        videoId: "dQw4w9WgXcQ"
+        title: `${topic.name} - Educational Video`,
+        duration: "10:00",
+        description: `Comprehensive video content about ${topic.name} in ${subject.title}.`,
+        videoId: topic.videoUrl?.split('/').pop() || "dQw4w9WgXcQ"
       }
-    ]
+    ];
   };
 
-  const progressValue = 25; // Demo progress
+  const videos = getTopicVideos();
+  const progressValue = 25;
 
   return (
     <div className="min-h-screen bg-white">
@@ -86,84 +128,24 @@ const VideoLearning = () => {
           <Button
             variant="ghost"
             size="sm"
-            onClick={() => navigate(`/topic/${subject}/${encodeURIComponent(decodedTopic)}`)}
-            className="text-white hover:bg-purple-700 min-w-[44px] min-h-[44px] flex items-center justify-center"
+            onClick={() => navigate(`/topic/${subject.id}/${topic.id}`)}
+            className="text-white hover:bg-purple-700"
           >
-            ← Back
+            <ChevronLeft className="h-5 w-5 mr-1" />
+            Back
           </Button>
-          <h1 className="text-xl font-bold text-center flex-1">{currentContent.title}</h1>
-          <div className="flex items-center space-x-2">
-            <Drawer>
-              <DrawerTrigger asChild>
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  className="text-white hover:bg-purple-700 min-w-[44px] min-h-[44px] flex items-center justify-center"
-                >
-                  ☰
-                </Button>
-              </DrawerTrigger>
-              <DrawerContent>
-                <div className="flex flex-col h-full">
-                  <div className="flex-1 space-y-6 pt-6">
-                    <h2 className="text-2xl font-bold text-purple-800 mb-8 px-6">Menu</h2>
-                    
-                    <div className="space-y-4 px-6">
-                      <Button
-                        variant="ghost"
-                        className="w-full justify-start text-left text-lg h-12"
-                        onClick={() => navigate("/games")}
-                      >
-                        🎮 Games
-                      </Button>
-                      
-                      <Button
-                        variant="ghost"
-                        className="w-full justify-start text-left text-lg h-12"
-                        onClick={() => navigate("/settings")}
-                      >
-                        ⚙️ Settings
-                      </Button>
-                      
-                      <Button
-                        variant="ghost"
-                        className="w-full justify-start text-left text-lg h-12"
-                        onClick={() => navigate("/feedback")}
-                      >
-                        💬 Feedback
-                      </Button>
-                      
-                      <Button
-                        variant="ghost"
-                        className="w-full justify-start text-left text-lg h-12"
-                        onClick={() => navigate("/support")}
-                      >
-                        📞 Contact Support
-                      </Button>
-                    </div>
-                  </div>
-                  
-                  <div className="p-4">
-                    <DrawerClose asChild>
-                      <Button variant="outline" className="w-full">
-                        Close Menu
-                      </Button>
-                    </DrawerClose>
-                  </div>
-                </div>
-              </DrawerContent>
-            </Drawer>
-
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={() => navigate("/profile")}
-              className="w-8 h-8 bg-purple-300 rounded-full flex items-center justify-center text-purple-800 font-bold hover:bg-purple-200"
-            >
-              👤
-            </Button>
-          </div>
+          <h1 className="text-xl font-bold text-center flex-1">Learn: {topic.name}</h1>
+          <Button
+            variant="ghost"
+            size="sm"
+            className="text-white hover:bg-purple-700"
+            onClick={() => navigate(`/learn/${subject.id}`)}
+          >
+            <Play className="h-5 w-5" />
+          </Button>
         </div>
+        
+        <p className="text-purple-200 text-sm mb-2">Video Content for {subject.title}</p>
         
         {/* Progress Bar */}
         <div className="space-y-2">
@@ -178,14 +160,14 @@ const VideoLearning = () => {
       {/* Video Content */}
       <div className="px-6 py-8">
         <div className="space-y-6">
-          {currentContent.videos.map((video: any, index: number) => (
+          {videos.map((video: any, index: number) => (
             <div key={index} className="bg-white rounded-xl shadow-lg overflow-hidden border border-gray-200">
               {/* Video Player Area */}
               <div className="relative h-48 bg-gradient-to-br from-gray-100 to-gray-200">
                 <iframe
                   className="w-full h-full rounded-t-xl"
                   src={`https://www.youtube.com/embed/${video.videoId}`}
-                  title={video.title}
+                  title={`${topic.name} - ${video.title}`}
                   frameBorder="0"
                   allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                   allowFullScreen
@@ -202,15 +184,21 @@ const VideoLearning = () => {
                 <h3 className="text-xl font-bold text-purple-600 mb-2">
                   {video.title}
                 </h3>
-                <p className="text-gray-600 leading-relaxed">
+                <p className="text-gray-600 leading-relaxed mb-4">
                   {video.description}
                 </p>
                 
-                <div className="mt-4 flex items-center justify-between">
+                <div className="bg-green-50 border-l-4 border-green-400 p-3 rounded mb-4">
+                  <p className="text-green-700 text-sm">
+                    <strong>Topic Focus:</strong> This video is specifically about {topic.name} concepts in {subject.title}.
+                  </p>
+                </div>
+                
+                <div className="flex items-center justify-between">
                   <div className="flex items-center space-x-4 text-sm text-gray-500">
                     <span>Duration: {video.duration}</span>
                     <span>•</span>
-                    <span>Educational Content</span>
+                    <span>{subject.title} Content</span>
                   </div>
                   
                   <Button variant="outline" size="sm">
@@ -224,23 +212,23 @@ const VideoLearning = () => {
 
         {/* Continue Learning Section */}
         <div className="mt-8 bg-gradient-to-r from-purple-50 to-purple-100 rounded-xl p-6">
-          <h3 className="text-lg font-semibold text-purple-600 mb-3">Continue Your Learning Journey</h3>
+          <h3 className="text-lg font-semibold text-purple-600 mb-3">Continue Learning {topic.name}</h3>
           <p className="text-gray-600 mb-4">
-            After watching these videos, test your knowledge with our interactive quizzes or explore related topics.
+            After watching these topic-specific videos, test your knowledge with quizzes or explore additional reading materials about {topic.name}.
           </p>
           
           <div className="flex space-x-3">
             <Button 
-              onClick={() => navigate('/quiz')}
+              onClick={() => navigate(`/quiz/${subject.id}/${topic.id}`)}
               className="bg-green-600 hover:bg-green-700"
             >
-              Take Quiz
+              Take {topic.name} Quiz
             </Button>
             <Button 
               variant="outline"
-              onClick={() => navigate(`/learn/reading/${subject}/${encodeURIComponent(decodedTopic)}`)}
+              onClick={() => navigate(`/learn/reading/${subject.id}/${topic.id}`)}
             >
-              Read More
+              Read More About {topic.name}
             </Button>
           </div>
         </div>
