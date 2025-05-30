@@ -1,4 +1,3 @@
-
 export interface Topic {
   id: string;
   name: string;
@@ -1160,113 +1159,383 @@ export const allQuizzes: Quiz[] = [
   }
 ];
 
-export const allGames: Game[] = [
+export const allGames = [
+  // Chemistry Games
   {
-    id: 'periodic-table-match',
-    name: 'Periodic Table Match',
-    icon: '⚛️',
-    subject: 'chemistry',
-    color: 'from-orange-300 to-orange-400',
-    description: 'Match elements with their symbols',
-    type: 'matching'
+    subject: "chemistry",
+    name: "Periodic Table Match",
+    description: "Match elements with their symbols",
+    icon: "⚗️",
+    type: "matching",
+    color: "from-green-400 to-green-600",
+    questions: [
+      {
+        question: "Which element has the symbol 'H'?",
+        options: ["Helium", "Hydrogen", "Hafnium", "Holmium"],
+        correct: 1
+      },
+      {
+        question: "What is the atomic number of Carbon?",
+        options: ["6", "12", "14", "8"],
+        correct: 0
+      },
+      {
+        question: "Which element is known as 'Au'?",
+        options: ["Silver", "Gold", "Aluminum", "Argon"],
+        correct: 1
+      },
+      {
+        question: "What is the chemical symbol for Sodium?",
+        options: ["So", "Sd", "Na", "S"],
+        correct: 2
+      }
+    ]
   },
   {
-    id: 'cell-parts-quiz',
-    name: 'Cell Parts Quiz',
-    icon: '🧬',
-    subject: 'biology',
-    color: 'from-green-300 to-green-400',
-    description: 'Identify cell organelles and their functions',
-    type: 'quiz'
+    subject: "chemistry",
+    name: "Element Matching",
+    description: "Match elements with their properties",
+    icon: "🧪",
+    type: "quiz",
+    color: "from-green-400 to-green-600",
+    questions: [
+      {
+        question: "Which gas makes up most of Earth's atmosphere?",
+        options: ["Oxygen", "Carbon dioxide", "Nitrogen", "Hydrogen"],
+        correct: 2
+      },
+      {
+        question: "What is the most abundant element in the universe?",
+        options: ["Oxygen", "Carbon", "Hydrogen", "Helium"],
+        correct: 2
+      }
+    ]
   },
   {
-    id: 'volcano-memory',
-    name: 'Volcano Memory Game',
-    icon: '🌋',
-    subject: 'geography',
-    color: 'from-red-300 to-red-400',
-    description: 'Match volcanic features and facts',
-    type: 'memory'
+    subject: "chemistry",
+    name: "Reaction Timer",
+    description: "Quick reactions and chemical equations",
+    icon: "⏱️",
+    type: "timed",
+    color: "from-green-400 to-green-600",
+    questions: [
+      {
+        question: "What happens when you mix an acid and a base?",
+        options: ["Explosion", "Neutralization", "Evaporation", "Freezing"],
+        correct: 1
+      },
+      {
+        question: "What type of reaction is photosynthesis?",
+        options: ["Combustion", "Decomposition", "Synthesis", "Single replacement"],
+        correct: 2
+      }
+    ]
+  },
+
+  // Biology Games
+  {
+    subject: "biology",
+    name: "Cell Parts Quiz",
+    description: "Learn about cell organelles and their functions",
+    icon: "🔬",
+    type: "quiz",
+    color: "from-blue-400 to-blue-600",
+    questions: [
+      {
+        question: "What is the control center of the cell?",
+        options: ["Mitochondria", "Nucleus", "Ribosome", "Cytoplasm"],
+        correct: 1
+      },
+      {
+        question: "Which organelle produces energy for the cell?",
+        options: ["Nucleus", "Mitochondria", "Golgi apparatus", "Lysosome"],
+        correct: 1
+      },
+      {
+        question: "What controls what enters and exits the cell?",
+        options: ["Cell wall", "Cell membrane", "Nucleus", "Cytoplasm"],
+        correct: 1
+      }
+    ]
   },
   {
-    id: 'math-puzzle',
-    name: 'Math Puzzle Challenge',
-    icon: '🔢',
-    subject: 'mathematics',
-    color: 'from-blue-300 to-blue-400',
-    description: 'Solve algebra and geometry puzzles',
-    type: 'puzzle'
+    subject: "biology",
+    name: "DNA Sequence",
+    description: "Learn about DNA structure and base pairing",
+    icon: "🧬",
+    type: "puzzle",
+    color: "from-blue-400 to-blue-600",
+    questions: [
+      {
+        question: "What does DNA stand for?",
+        options: ["Deoxyribonucleic Acid", "Dynamic Nuclear Acid", "Double Nuclear Acid", "Deoxyribose Acid"],
+        correct: 0
+      },
+      {
+        question: "Which bases pair together in DNA?",
+        options: ["A-T and G-C", "A-G and T-C", "A-C and T-G", "All pair equally"],
+        correct: 0
+      },
+      {
+        question: "How many strands does DNA have?",
+        options: ["1", "2", "3", "4"],
+        correct: 1
+      },
+      {
+        question: "What shape is DNA?",
+        options: ["Linear", "Circular", "Double helix", "Triple helix"],
+        correct: 2
+      }
+    ]
+  },
+
+  // Geography Games
+  {
+    subject: "geography",
+    name: "Volcano Memory Game",
+    description: "Test your knowledge about volcanoes",
+    icon: "🌋",
+    type: "memory",
+    color: "from-red-400 to-red-600",
+    questions: [
+      {
+        question: "What type of rock forms from cooled lava?",
+        options: ["Sedimentary", "Metamorphic", "Igneous", "Limestone"],
+        correct: 2
+      },
+      {
+        question: "What is the ring of volcanoes around the Pacific Ocean called?",
+        options: ["Ring of Fire", "Pacific Ring", "Volcano Belt", "Fire Circle"],
+        correct: 0
+      },
+      {
+        question: "What causes volcanic eruptions?",
+        options: ["Tectonic plate movement", "Ocean currents", "Wind patterns", "Solar radiation"],
+        correct: 0
+      }
+    ]
   },
   {
-    id: 'dna-sequence',
-    name: 'DNA Sequence Game',
-    icon: '🧬',
-    subject: 'biology',
-    color: 'from-green-300 to-green-400',
-    description: 'Build DNA sequences correctly',
-    type: 'puzzle'
+    subject: "geography",
+    name: "Map Explorer",
+    description: "Explore world geography and landmarks",
+    icon: "🗺️",
+    type: "exploration",
+    color: "from-red-400 to-red-600",
+    questions: [
+      {
+        question: "Which continent is the largest by area?",
+        options: ["Africa", "Asia", "North America", "Europe"],
+        correct: 1
+      },
+      {
+        question: "What is the longest river in the world?",
+        options: ["Amazon", "Nile", "Mississippi", "Yangtze"],
+        correct: 1
+      }
+    ]
   },
   {
-    id: 'map-explorer',
-    name: 'Map Explorer',
-    icon: '🗺️',
-    subject: 'geography',
-    color: 'from-emerald-300 to-emerald-400',
-    description: 'Navigate and identify locations',
-    type: 'quiz'
+    subject: "geography",
+    name: "Climate Challenge",
+    description: "Learn about different climate zones and weather patterns",
+    icon: "🌡️",
+    type: "challenge",
+    color: "from-red-400 to-red-600",
+    questions: [
+      {
+        question: "What causes the seasons?",
+        options: ["Distance from sun", "Earth's tilt", "Solar flares", "Moon phases"],
+        correct: 1
+      },
+      {
+        question: "Which climate zone is the hottest?",
+        options: ["Temperate", "Polar", "Tropical", "Desert"],
+        correct: 2
+      },
+      {
+        question: "What is the main greenhouse gas?",
+        options: ["Oxygen", "Nitrogen", "Carbon dioxide", "Hydrogen"],
+        correct: 2
+      },
+      {
+        question: "Which ocean current affects European climate?",
+        options: ["Gulf Stream", "California Current", "Peru Current", "Benguela Current"],
+        correct: 0
+      }
+    ]
+  },
+
+  // Mathematics Games
+  {
+    subject: "mathematics",
+    name: "Math Puzzle Challenge",
+    description: "Solve mathematical puzzles and problems",
+    icon: "🧮",
+    type: "puzzle",
+    color: "from-purple-400 to-purple-600",
+    questions: [
+      {
+        question: "What is 15% of 200?",
+        options: ["30", "25", "35", "20"],
+        correct: 0
+      },
+      {
+        question: "If x + 5 = 12, what is x?",
+        options: ["7", "6", "8", "5"],
+        correct: 0
+      },
+      {
+        question: "What is the area of a square with side 4?",
+        options: ["16", "12", "8", "20"],
+        correct: 0
+      }
+    ]
   },
   {
-    id: 'equation-solver',
-    name: 'Equation Solver',
-    icon: '📊',
-    subject: 'mathematics',
-    color: 'from-blue-300 to-blue-400',
-    description: 'Solve mathematical equations',
-    type: 'puzzle'
+    subject: "mathematics",
+    name: "Equation Solver",
+    description: "Practice solving equations step by step",
+    icon: "📐",
+    type: "solver",
+    color: "from-purple-400 to-purple-600",
+    questions: [
+      {
+        question: "Solve: 2x + 6 = 14",
+        options: ["4", "3", "5", "2"],
+        correct: 0
+      },
+      {
+        question: "What is the value of π (pi) approximately?",
+        options: ["3.14", "2.14", "4.14", "1.14"],
+        correct: 0
+      }
+    ]
+  },
+
+  // Physics Games
+  {
+    subject: "physics",
+    name: "Force Calculator",
+    description: "Calculate forces and understand Newton's laws",
+    icon: "⚡",
+    type: "calculator",
+    color: "from-yellow-400 to-yellow-600",
+    questions: [
+      {
+        question: "What is the formula for force?",
+        options: ["F = ma", "F = mv", "F = m/a", "F = a/m"],
+        correct: 0
+      },
+      {
+        question: "What is the unit of force?",
+        options: ["Joule", "Newton", "Watt", "Pascal"],
+        correct: 1
+      }
+    ]
   },
   {
-    id: 'element-matching',
-    name: 'Element Matching',
-    icon: '⚛️',
-    subject: 'chemistry',
-    color: 'from-orange-300 to-orange-400',
-    description: 'Match elements to their properties',
-    type: 'matching'
+    subject: "physics",
+    name: "Motion Physics",
+    description: "Learn about motion, velocity, and acceleration",
+    icon: "🏃",
+    type: "simulation",
+    color: "from-yellow-400 to-yellow-600",
+    questions: [
+      {
+        question: "What is velocity?",
+        options: ["Speed only", "Displacement per unit time", "Distance per unit time", "Acceleration"],
+        correct: 1
+      },
+      {
+        question: "What is Newton's first law?",
+        options: ["F=ma", "Objects at rest stay at rest", "Action-reaction", "Energy conservation"],
+        correct: 1
+      }
+    ]
+  },
+
+  // English Games
+  {
+    subject: "english",
+    name: "Grammar Catcher",
+    description: "Catch grammar mistakes and learn proper usage",
+    icon: "📝",
+    type: "catch",
+    color: "from-indigo-400 to-indigo-600",
+    questions: [
+      {
+        question: "What part of speech is 'quickly'?",
+        options: ["Noun", "Verb", "Adjective", "Adverb"],
+        correct: 3
+      },
+      {
+        question: "Which is a proper noun?",
+        options: ["dog", "city", "London", "happiness"],
+        correct: 2
+      }
+    ]
   },
   {
-    id: 'reaction-timer',
-    name: 'Reaction Timer',
-    icon: '⚗️',
-    subject: 'chemistry',
-    color: 'from-orange-300 to-orange-400',
-    description: 'Balance chemical equations quickly',
-    type: 'puzzle'
+    subject: "english",
+    name: "Vocabulary Builder",
+    description: "Build your vocabulary with word games",
+    icon: "📚",
+    type: "vocabulary",
+    color: "from-indigo-400 to-indigo-600",
+    questions: [
+      {
+        question: "What does 'benevolent' mean?",
+        options: ["Evil", "Kind", "Angry", "Sad"],
+        correct: 1
+      },
+      {
+        question: "What is a synonym for 'happy'?",
+        options: ["Sad", "Joyful", "Angry", "Tired"],
+        correct: 1
+      }
+    ]
+  },
+
+  // Computer Science Games
+  {
+    subject: "computer-science",
+    name: "Binary Converter",
+    description: "Learn binary numbers and conversion",
+    icon: "💻",
+    type: "converter",
+    color: "from-gray-400 to-gray-600",
+    questions: [
+      {
+        question: "What is 5 in binary?",
+        options: ["101", "110", "111", "100"],
+        correct: 0
+      },
+      {
+        question: "What does CPU stand for?",
+        options: ["Central Processing Unit", "Computer Processing Unit", "Central Program Unit", "Computer Program Unit"],
+        correct: 0
+      }
+    ]
   },
   {
-    id: 'grammar-catcher',
-    name: 'Grammar Catcher',
-    icon: '📝',
-    subject: 'english',
-    color: 'from-pink-300 to-pink-400',
-    description: 'Catch grammar mistakes in sentences',
-    type: 'quiz'
-  },
-  {
-    id: 'binary-converter',
-    name: 'Binary Converter',
-    icon: '💻',
-    subject: 'computer-science',
-    color: 'from-indigo-300 to-indigo-400',
-    description: 'Convert numbers to binary and back',
-    type: 'puzzle'
-  },
-  {
-    id: 'climate-challenge',
-    name: 'Climate Challenge',
-    icon: '🌤️',
-    subject: 'environmental-science',
-    color: 'from-teal-300 to-teal-400',
-    description: 'Learn about climate change solutions',
-    type: 'quiz'
+    subject: "computer-science",
+    name: "Code Challenge",
+    description: "Practice coding concepts and logic",
+    icon: "🖥️",
+    type: "coding",
+    color: "from-gray-400 to-gray-600",
+    questions: [
+      {
+        question: "What is a variable in programming?",
+        options: ["A constant value", "Storage for data", "A function", "An algorithm"],
+        correct: 1
+      },
+      {
+        question: "Which language is primarily used for web development?",
+        options: ["Python", "JavaScript", "C++", "Java"],
+        correct: 1
+      }
+    ]
   }
 ];
