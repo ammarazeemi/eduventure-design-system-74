@@ -2,6 +2,8 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import { Drawer, DrawerClose, DrawerContent, DrawerTrigger } from "@/components/ui/drawer";
 import NavigationBar from "@/components/NavigationBar";
 
 const Dashboard = () => {
@@ -60,10 +62,82 @@ const Dashboard = () => {
         
         {/* Header */}
         <div className="relative z-10 flex items-center justify-between p-6 text-white">
-          <button className="text-2xl">☰</button>
+          <Drawer>
+            <DrawerTrigger asChild>
+              <Button variant="ghost" size="sm" className="text-white hover:bg-purple-700">
+                ☰
+              </Button>
+            </DrawerTrigger>
+            <DrawerContent>
+              <div className="flex flex-col h-full">
+                <div className="flex-1 space-y-6 pt-6">
+                  <h2 className="text-2xl font-bold text-purple-800 mb-8">Menu</h2>
+                  
+                  <div className="space-y-4">
+                    <Button
+                      variant="ghost"
+                      className="w-full justify-start text-left text-lg h-12"
+                      onClick={() => navigate("/games")}
+                    >
+                      🎮 Games
+                    </Button>
+                    
+                    <Button
+                      variant="ghost"
+                      className="w-full justify-start text-left text-lg h-12"
+                      onClick={() => navigate("/settings")}
+                    >
+                      ⚙️ Settings
+                    </Button>
+                    
+                    <Button
+                      variant="ghost"
+                      className="w-full justify-start text-left text-lg h-12"
+                      onClick={() => navigate("/feedback")}
+                    >
+                      💬 Feedback
+                    </Button>
+                    
+                    <Button
+                      variant="ghost"
+                      className="w-full justify-start text-left text-lg h-12"
+                      onClick={() => navigate("/support")}
+                    >
+                      📞 Contact Support
+                    </Button>
+                  </div>
+                </div>
+                
+                <div className="p-4">
+                  <DrawerClose asChild>
+                    <Button variant="outline" className="w-full">
+                      Close Menu
+                    </Button>
+                  </DrawerClose>
+                </div>
+              </div>
+            </DrawerContent>
+          </Drawer>
+
           <h1 className="text-2xl font-bold">Eduventure</h1>
-          <div className="w-8 h-8 bg-purple-300 rounded-full flex items-center justify-center">
-            <span className="text-purple-800 font-bold">U</span>
+          
+          <div className="flex items-center space-x-2">
+            <Button
+              variant="ghost"
+              size="sm"
+              className="text-white hover:bg-purple-700"
+              onClick={() => {/* Show hints */}}
+            >
+              ❓
+            </Button>
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => navigate("/profile")}
+              className="w-8 h-8 bg-purple-300 rounded-full flex items-center justify-center text-purple-800 font-bold hover:bg-purple-200"
+            >
+              U
+            </Button>
           </div>
         </div>
 
@@ -100,6 +174,12 @@ const Dashboard = () => {
                 <p className="text-gray-600 text-sm">
                   {subject.subtitle}
                 </p>
+                <div className="mt-2">
+                  <div className="bg-white bg-opacity-50 rounded-full h-2 w-24">
+                    <div className="bg-purple-600 h-2 rounded-full" style={{width: `${Math.floor(Math.random() * 80) + 20}%`}}></div>
+                  </div>
+                  <p className="text-xs text-gray-700 mt-1">Progress</p>
+                </div>
               </div>
               <div className="text-4xl">
                 {subject.icon}

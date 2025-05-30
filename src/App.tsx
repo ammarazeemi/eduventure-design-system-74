@@ -16,6 +16,10 @@ import Explore from "./pages/Explore";
 import Quiz from "./pages/Quiz";
 import QuizGame from "./pages/QuizGame";
 import Profile from "./pages/Profile";
+import Games from "./pages/Games";
+import Settings from "./pages/Settings";
+import Feedback from "./pages/Feedback";
+import Support from "./pages/Support";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -39,6 +43,10 @@ const App = () => (
           <Route path="/quiz" element={<Quiz />} />
           <Route path="/quiz/:subject" element={<QuizGame />} />
           <Route path="/profile" element={<Profile />} />
+          <Route path="/games" element={<Games />} />
+          <Route path="/settings" element={<Settings />} />
+          <Route path="/feedback" element={<Feedback />} />
+          <Route path="/support" element={<Support />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>
