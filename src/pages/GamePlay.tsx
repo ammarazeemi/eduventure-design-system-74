@@ -15,58 +15,290 @@ const GamePlay = () => {
   const [showResult, setShowResult] = useState(false);
   const [isAnswered, setIsAnswered] = useState(false);
 
-  // Game questions based on game type
-  const gameQuestions: { [key: string]: any } = {
-    "Periodic Table Match": {
-      questions: [
-        {
-          question: "Which element has the symbol 'H'?",
-          options: ["Helium", "Hydrogen", "Hafnium", "Holmium"],
-          correct: 1
-        },
-        {
-          question: "What is the atomic number of Carbon?",
-          options: ["6", "12", "14", "8"],
-          correct: 0
-        },
-        {
-          question: "Which element is known as the 'King of Chemicals'?",
-          options: ["Hydrogen", "Oxygen", "Sulfuric Acid", "Carbon"],
-          correct: 2
-        }
-      ]
+  // Game questions organized by subject and game name
+  const gameQuestions: { [key: string]: { [key: string]: any } } = {
+    chemistry: {
+      "Periodic Table Match": {
+        questions: [
+          {
+            question: "Which element has the symbol 'H'?",
+            options: ["Helium", "Hydrogen", "Hafnium", "Holmium"],
+            correct: 1
+          },
+          {
+            question: "What is the atomic number of Carbon?",
+            options: ["6", "12", "14", "8"],
+            correct: 0
+          },
+          {
+            question: "Which element is known as 'Au'?",
+            options: ["Silver", "Gold", "Aluminum", "Argon"],
+            correct: 1
+          },
+          {
+            question: "What is the chemical symbol for Sodium?",
+            options: ["So", "Sd", "Na", "S"],
+            correct: 2
+          }
+        ]
+      },
+      "Element Matching": {
+        questions: [
+          {
+            question: "Which gas makes up most of Earth's atmosphere?",
+            options: ["Oxygen", "Carbon dioxide", "Nitrogen", "Hydrogen"],
+            correct: 2
+          },
+          {
+            question: "What is the most abundant element in the universe?",
+            options: ["Oxygen", "Carbon", "Hydrogen", "Helium"],
+            correct: 2
+          }
+        ]
+      },
+      "Reaction Timer": {
+        questions: [
+          {
+            question: "What happens when you mix an acid and a base?",
+            options: ["Explosion", "Neutralization", "Evaporation", "Freezing"],
+            correct: 1
+          },
+          {
+            question: "What type of reaction is photosynthesis?",
+            options: ["Combustion", "Decomposition", "Synthesis", "Single replacement"],
+            correct: 2
+          }
+        ]
+      }
     },
-    "Cell Parts Quiz": {
-      questions: [
-        {
-          question: "What is the control center of the cell?",
-          options: ["Mitochondria", "Nucleus", "Ribosome", "Cytoplasm"],
-          correct: 1
-        },
-        {
-          question: "Which organelle produces energy for the cell?",
-          options: ["Nucleus", "Mitochondria", "Golgi apparatus", "Lysosome"],
-          correct: 1
-        }
-      ]
+    biology: {
+      "Cell Parts Quiz": {
+        questions: [
+          {
+            question: "What is the control center of the cell?",
+            options: ["Mitochondria", "Nucleus", "Ribosome", "Cytoplasm"],
+            correct: 1
+          },
+          {
+            question: "Which organelle produces energy for the cell?",
+            options: ["Nucleus", "Mitochondria", "Golgi apparatus", "Lysosome"],
+            correct: 1
+          },
+          {
+            question: "What controls what enters and exits the cell?",
+            options: ["Cell wall", "Cell membrane", "Nucleus", "Cytoplasm"],
+            correct: 1
+          }
+        ]
+      },
+      "DNA Sequence": {
+        questions: [
+          {
+            question: "What does DNA stand for?",
+            options: ["Deoxyribonucleic Acid", "Dynamic Nuclear Acid", "Double Nuclear Acid", "Deoxyribose Acid"],
+            correct: 0
+          },
+          {
+            question: "Which bases pair together in DNA?",
+            options: ["A-T and G-C", "A-G and T-C", "A-C and T-G", "All pair equally"],
+            correct: 0
+          }
+        ]
+      }
     },
-    "Volcano Memory Game": {
-      questions: [
-        {
-          question: "What type of rock forms from cooled lava?",
-          options: ["Sedimentary", "Metamorphic", "Igneous", "Limestone"],
-          correct: 2
-        },
-        {
-          question: "What is the ring of volcanoes around the Pacific Ocean called?",
-          options: ["Ring of Fire", "Pacific Ring", "Volcano Belt", "Fire Circle"],
-          correct: 0
-        }
-      ]
+    geography: {
+      "Volcano Memory Game": {
+        questions: [
+          {
+            question: "What type of rock forms from cooled lava?",
+            options: ["Sedimentary", "Metamorphic", "Igneous", "Limestone"],
+            correct: 2
+          },
+          {
+            question: "What is the ring of volcanoes around the Pacific Ocean called?",
+            options: ["Ring of Fire", "Pacific Ring", "Volcano Belt", "Fire Circle"],
+            correct: 0
+          },
+          {
+            question: "What causes volcanic eruptions?",
+            options: ["Tectonic plate movement", "Ocean currents", "Wind patterns", "Solar radiation"],
+            correct: 0
+          }
+        ]
+      },
+      "Map Explorer": {
+        questions: [
+          {
+            question: "Which continent is the largest by area?",
+            options: ["Africa", "Asia", "North America", "Europe"],
+            correct: 1
+          },
+          {
+            question: "What is the longest river in the world?",
+            options: ["Amazon", "Nile", "Mississippi", "Yangtze"],
+            correct: 1
+          }
+        ]
+      },
+      "Climate Challenge": {
+        questions: [
+          {
+            question: "What causes the seasons?",
+            options: ["Distance from sun", "Earth's tilt", "Solar flares", "Moon phases"],
+            correct: 1
+          },
+          {
+            question: "Which climate zone is the hottest?",
+            options: ["Temperate", "Polar", "Tropical", "Desert"],
+            correct: 2
+          }
+        ]
+      }
+    },
+    mathematics: {
+      "Math Puzzle Challenge": {
+        questions: [
+          {
+            question: "What is 15% of 200?",
+            options: ["30", "25", "35", "20"],
+            correct: 0
+          },
+          {
+            question: "If x + 5 = 12, what is x?",
+            options: ["7", "6", "8", "5"],
+            correct: 0
+          },
+          {
+            question: "What is the area of a square with side 4?",
+            options: ["16", "12", "8", "20"],
+            correct: 0
+          }
+        ]
+      },
+      "Equation Solver": {
+        questions: [
+          {
+            question: "Solve: 2x + 6 = 14",
+            options: ["4", "3", "5", "2"],
+            correct: 0
+          },
+          {
+            question: "What is the value of π (pi) approximately?",
+            options: ["3.14", "2.14", "4.14", "1.14"],
+            correct: 0
+          }
+        ]
+      }
+    },
+    physics: {
+      "Force Calculator": {
+        questions: [
+          {
+            question: "What is the formula for force?",
+            options: ["F = ma", "F = mv", "F = m/a", "F = a/m"],
+            correct: 0
+          },
+          {
+            question: "What is the unit of force?",
+            options: ["Joule", "Newton", "Watt", "Pascal"],
+            correct: 1
+          }
+        ]
+      },
+      "Motion Physics": {
+        questions: [
+          {
+            question: "What is velocity?",
+            options: ["Speed only", "Displacement per unit time", "Distance per unit time", "Acceleration"],
+            correct: 1
+          },
+          {
+            question: "What is Newton's first law?",
+            options: ["F=ma", "Objects at rest stay at rest", "Action-reaction", "Energy conservation"],
+            correct: 1
+          }
+        ]
+      }
+    },
+    english: {
+      "Grammar Catcher": {
+        questions: [
+          {
+            question: "What part of speech is 'quickly'?",
+            options: ["Noun", "Verb", "Adjective", "Adverb"],
+            correct: 3
+          },
+          {
+            question: "Which is a proper noun?",
+            options: ["dog", "city", "London", "happiness"],
+            correct: 2
+          }
+        ]
+      },
+      "Vocabulary Builder": {
+        questions: [
+          {
+            question: "What does 'benevolent' mean?",
+            options: ["Evil", "Kind", "Angry", "Sad"],
+            correct: 1
+          },
+          {
+            question: "What is a synonym for 'happy'?",
+            options: ["Sad", "Joyful", "Angry", "Tired"],
+            correct: 1
+          }
+        ]
+      }
+    },
+    "computer-science": {
+      "Binary Converter": {
+        questions: [
+          {
+            question: "What is 5 in binary?",
+            options: ["101", "110", "111", "100"],
+            correct: 0
+          },
+          {
+            question: "What does CPU stand for?",
+            options: ["Central Processing Unit", "Computer Processing Unit", "Central Program Unit", "Computer Program Unit"],
+            correct: 0
+          }
+        ]
+      },
+      "Code Challenge": {
+        questions: [
+          {
+            question: "What is a variable in programming?",
+            options: ["A constant value", "Storage for data", "A function", "An algorithm"],
+            correct: 1
+          },
+          {
+            question: "Which language is primarily used for web development?",
+            options: ["Python", "JavaScript", "C++", "Java"],
+            correct: 1
+          }
+        ]
+      }
     }
   };
 
-  const currentGame = gameQuestions[decodedGameName] || gameQuestions["Cell Parts Quiz"];
+  // Get the correct game data based on subject and game name
+  let currentGame;
+  if (subject && gameQuestions[subject] && gameQuestions[subject][decodedGameName]) {
+    currentGame = gameQuestions[subject][decodedGameName];
+  } else {
+    // Fallback to a default game if not found
+    currentGame = {
+      questions: [
+        {
+          question: "What is 2 + 2?",
+          options: ["3", "4", "5", "6"],
+          correct: 1
+        }
+      ]
+    };
+  }
+
   const questions = currentGame.questions;
   const totalQuestions = questions.length;
 
