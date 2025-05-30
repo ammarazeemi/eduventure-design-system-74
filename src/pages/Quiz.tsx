@@ -3,6 +3,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { Drawer, DrawerClose, DrawerContent, DrawerTrigger } from "@/components/ui/drawer";
 import NavigationBar from "@/components/NavigationBar";
 
 const Quiz = () => {
@@ -10,21 +11,64 @@ const Quiz = () => {
   const navigate = useNavigate();
 
   const quizzes = [
-    { name: "Algebra Quiz", icon: "🔢", score: "Last Score: 85%", color: "from-blue-300 to-blue-400", subject: "algebra" },
-    { name: "Cell Biology Quiz", icon: "🧬", score: "Last Score: 92%", color: "from-green-300 to-green-400", subject: "cell-biology" },
-    { name: "Volcanoes Quiz", icon: "🌋", score: "Last Score: 78%", color: "from-red-300 to-red-400", subject: "volcanoes" },
-    { name: "Periodic Table Quiz", icon: "⚛️", score: "Last Score: 88%", color: "from-orange-300 to-orange-400", subject: "periodic-table" },
-    { name: "Geography Quiz", icon: "🌍", score: "New Quiz!", color: "from-emerald-300 to-emerald-400", subject: "geography" },
-    { name: "Number Theory Quiz", icon: "📊", score: "Last Score: 95%", color: "from-purple-300 to-purple-400", subject: "number-theory" }
+    { 
+      name: "Algebra Quiz", 
+      icon: "🔢", 
+      score: "Last Score: 85%", 
+      color: "from-blue-300 to-blue-400", 
+      subject: "math",
+      topic: "algebra"
+    },
+    { 
+      name: "Cell Biology Quiz", 
+      icon: "🧬", 
+      score: "Last Score: 92%", 
+      color: "from-green-300 to-green-400", 
+      subject: "biology",
+      topic: "cell"
+    },
+    { 
+      name: "Volcanoes Quiz", 
+      icon: "🌋", 
+      score: "Last Score: 78%", 
+      color: "from-red-300 to-red-400", 
+      subject: "geography",
+      topic: "volcanoes"
+    },
+    { 
+      name: "Periodic Table Quiz", 
+      icon: "⚛️", 
+      score: "Last Score: 88%", 
+      color: "from-orange-300 to-orange-400", 
+      subject: "chemistry",
+      topic: "periodic-table"
+    },
+    { 
+      name: "Geography Quiz", 
+      icon: "🌍", 
+      score: "New Quiz!", 
+      color: "from-emerald-300 to-emerald-400", 
+      subject: "geography",
+      topic: "intro"
+    },
+    { 
+      name: "Number Theory Quiz", 
+      icon: "🔢", 
+      score: "Last Score: 95%", 
+      color: "from-purple-300 to-purple-400", 
+      subject: "math",
+      topic: "number-theory"
+    }
   ];
 
   const filteredQuizzes = quizzes.filter(quiz =>
     quiz.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    quiz.subject.toLowerCase().includes(searchQuery.toLowerCase())
+    quiz.subject.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    quiz.topic.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
-  const handleQuizClick = (quizSubject: string) => {
-    navigate(`/quiz/${quizSubject}`);
+  const handleQuizClick = (quiz: any) => {
+    navigate(`/quiz/${quiz.subject}/${quiz.topic}`);
   };
 
   return (
@@ -50,15 +94,80 @@ const Quiz = () => {
           >
             ← Back
           </Button>
-          <h1 className="text-2xl font-bold">Quiz</h1>
-          <Button
-            variant="ghost"
-            size="sm"
-            className="text-white hover:bg-purple-700 min-w-[44px] min-h-[44px] flex items-center justify-center"
-            onClick={() => {/* Show quiz hints */}}
-          >
-            ❓
-          </Button>
+          
+          <h1 className="text-2xl font-bold">All Quizzes</h1>
+          
+          <div className="flex items-center space-x-2">
+            <Drawer>
+              <DrawerTrigger asChild>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="text-white hover:bg-purple-700 min-w-[44px] min-h-[44px] flex items-center justify-center"
+                >
+                  ☰
+                </Button>
+              </DrawerTrigger>
+              <DrawerContent>
+                <div className="flex flex-col h-full">
+                  <div className="flex-1 space-y-6 pt-6">
+                    <h2 className="text-2xl font-bold text-purple-800 mb-8 px-6">Menu</h2>
+                    
+                    <div className="space-y-4 px-6">
+                      <Button
+                        variant="ghost"
+                        className="w-full justify-start text-left text-lg h-12"
+                        onClick={() => navigate("/games")}
+                      >
+                        🎮 Games
+                      </Button>
+                      
+                      <Button
+                        variant="ghost"
+                        className="w-full justify-start text-left text-lg h-12"
+                        onClick={() => navigate("/settings")}
+                      >
+                        ⚙️ Settings
+                      </Button>
+                      
+                      <Button
+                        variant="ghost"
+                        className="w-full justify-start text-left text-lg h-12"
+                        onClick={() => navigate("/feedback")}
+                      >
+                        💬 Feedback
+                      </Button>
+                      
+                      <Button
+                        variant="ghost"
+                        className="w-full justify-start text-left text-lg h-12"
+                        onClick={() => navigate("/support")}
+                      >
+                        📞 Contact Support
+                      </Button>
+                    </div>
+                  </div>
+                  
+                  <div className="p-4">
+                    <DrawerClose asChild>
+                      <Button variant="outline" className="w-full">
+                        Close Menu
+                      </Button>
+                    </DrawerClose>
+                  </div>
+                </div>
+              </DrawerContent>
+            </Drawer>
+
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => navigate("/profile")}
+              className="w-8 h-8 bg-purple-300 rounded-full flex items-center justify-center text-purple-800 font-bold hover:bg-purple-200"
+            >
+              👤
+            </Button>
+          </div>
         </div>
         
         <div className="relative z-10 flex flex-col items-center justify-center text-white pb-8">
@@ -81,7 +190,7 @@ const Quiz = () => {
         {filteredQuizzes.map((quiz, index) => (
           <div
             key={index}
-            onClick={() => handleQuizClick(quiz.subject)}
+            onClick={() => handleQuizClick(quiz)}
             className={`bg-gradient-to-r ${quiz.color} rounded-2xl p-4 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 cursor-pointer`}
           >
             <div className="flex items-center justify-between">

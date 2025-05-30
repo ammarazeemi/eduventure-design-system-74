@@ -3,6 +3,7 @@ import { useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { Drawer, DrawerClose, DrawerContent, DrawerTrigger } from "@/components/ui/drawer";
 import NavigationBar from "@/components/NavigationBar";
 
 const SubjectLearning = () => {
@@ -10,51 +11,72 @@ const SubjectLearning = () => {
   const navigate = useNavigate();
   const [searchQuery, setSearchQuery] = useState("");
 
-  const topicsData = {
-    biology: [
-      "Cells", "Evolution", "Microbes", "Genetics", "DNA & RNA", "Human Body"
-    ],
-    maths: [
-      "Number Theory", "Integration", "Probability & Stats", "Discrete Maths"
-    ],
-    chemistry: [
-      "Atoms", "Molecules", "Chemical Bonding", "Periodic Table", "States of Matter", "Acids & Bases", "Reactions", "Lab Safety"
-    ],
-    geography: [
-      "Ecosystems", "Countries", "Volcanoes", "Climates", "Earth Layers", "Maps & Coordinates", "Natural Disasters"
-    ],
-    english: [
-      "Grammar", "Literature", "Creative Writing", "Poetry", "Reading Comprehension"
-    ],
-    physics: [
-      "Motion", "Forces", "Energy", "Waves", "Electricity"
-    ],
-    "computer-science": [
-      "Programming", "Algorithms", "Data Structures", "Web Development"
-    ],
-    history: [
-      "Ancient Civilizations", "World Wars", "Renaissance", "Industrial Revolution"
-    ],
-    "environmental-science": [
-      "Climate Change", "Biodiversity", "Pollution", "Conservation", "Renewable Energy"
-    ]
+  const subjectData: { [key: string]: any } = {
+    biology: {
+      title: "BIOLOGY",
+      icon: "🧬",
+      color: "from-green-300 to-green-400",
+      topics: [
+        { name: "Cells", icon: "🔬", progress: 75 },
+        { name: "DNA", icon: "🧬", progress: 60 },
+        { name: "Human Body", icon: "👤", progress: 40 },
+        { name: "Photosynthesis", icon: "🌱", progress: 90 },
+        { name: "Evolution", icon: "🦕", progress: 25 },
+        { name: "Microbes", icon: "🦠", progress: 55 }
+      ]
+    },
+    geography: {
+      title: "GEOGRAPHY",
+      icon: "🌍",
+      color: "from-emerald-300 to-emerald-400",
+      topics: [
+        { name: "Volcanoes", icon: "🌋", progress: 80 },
+        { name: "Maps", icon: "🗺️", progress: 65 },
+        { name: "Earth Layers", icon: "🌍", progress: 45 },
+        { name: "Climate", icon: "🌤️", progress: 30 },
+        { name: "Ecosystems", icon: "🌿", progress: 70 }
+      ]
+    },
+    chemistry: {
+      title: "CHEMISTRY",
+      icon: "⚛️",
+      color: "from-orange-300 to-orange-400",
+      topics: [
+        { name: "Atoms", icon: "⚛️", progress: 85 },
+        { name: "Periodic Table", icon: "📊", progress: 75 },
+        { name: "Molecules", icon: "🔬", progress: 60 },
+        { name: "Reactions", icon: "⚗️", progress: 40 },
+        { name: "Covalent Bonds", icon: "🔗", progress: 55 }
+      ]
+    },
+    maths: {
+      title: "MATHEMATICS",
+      icon: "📊",
+      color: "from-blue-300 to-blue-400",
+      topics: [
+        { name: "Algebra", icon: "🔢", progress: 90 },
+        { name: "Geometry", icon: "📐", progress: 70 },
+        { name: "Linear Equations", icon: "📈", progress: 80 },
+        { name: "Probability", icon: "🎲", progress: 45 },
+        { name: "Number Theory", icon: "🔢", progress: 95 }
+      ]
+    }
   };
 
-  const topics = topicsData[subject as keyof typeof topicsData] || [];
-  const subjectTitle = subject?.split('-').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
-
-  const filteredTopics = topics.filter(topic =>
-    topic.toLowerCase().includes(searchQuery.toLowerCase())
+  const currentSubject = subjectData[subject || "biology"] || subjectData.biology;
+  
+  const filteredTopics = currentSubject.topics.filter((topic: any) =>
+    topic.name.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
-  const handleTopicClick = (topic: string) => {
-    navigate(`/topic/${subject}/${encodeURIComponent(topic)}`);
+  const handleTopicClick = (topicName: string) => {
+    navigate(`/topic/${subject}/${encodeURIComponent(topicName)}`);
   };
 
   return (
     <div className="min-h-screen bg-white pb-20">
-      {/* Purple Wave Background */}
-      <div className="relative h-64 bg-gradient-to-br from-purple-600 to-purple-800 overflow-hidden">
+      {/* Header */}
+      <div className={`relative h-64 bg-gradient-to-r ${currentSubject.color} overflow-hidden`}>
         <div className="absolute inset-0">
           <svg viewBox="0 0 1440 320" className="absolute bottom-0 w-full h-full">
             <path
@@ -65,24 +87,93 @@ const SubjectLearning = () => {
           </svg>
         </div>
         
-        {/* Header */}
-        <div className="relative z-10 flex items-center justify-between p-6 text-white">
+        <div className="relative z-10 flex items-center justify-between p-6 text-gray-800">
           <Button
             variant="ghost"
             size="sm"
             onClick={() => navigate("/dashboard")}
-            className="text-white hover:bg-purple-700 min-w-[44px] min-h-[44px] flex items-center justify-center"
+            className="text-gray-800 hover:bg-white hover:bg-opacity-20 min-w-[44px] min-h-[44px] flex items-center justify-center"
           >
             ← Back
           </Button>
-          <h1 className="text-xl font-bold text-center flex-1">Learn</h1>
-          <div className="w-11 h-11"></div> {/* Spacer for alignment */}
-        </div>
+          
+          <h1 className="text-2xl font-bold">{currentSubject.title}</h1>
+          
+          <div className="flex items-center space-x-2">
+            <Drawer>
+              <DrawerTrigger asChild>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="text-gray-800 hover:bg-white hover:bg-opacity-20 min-w-[44px] min-h-[44px] flex items-center justify-center"
+                >
+                  ☰
+                </Button>
+              </DrawerTrigger>
+              <DrawerContent>
+                <div className="flex flex-col h-full">
+                  <div className="flex-1 space-y-6 pt-6">
+                    <h2 className="text-2xl font-bold text-purple-800 mb-8 px-6">Menu</h2>
+                    
+                    <div className="space-y-4 px-6">
+                      <Button
+                        variant="ghost"
+                        className="w-full justify-start text-left text-lg h-12"
+                        onClick={() => navigate("/games")}
+                      >
+                        🎮 Games
+                      </Button>
+                      
+                      <Button
+                        variant="ghost"
+                        className="w-full justify-start text-left text-lg h-12"
+                        onClick={() => navigate("/settings")}
+                      >
+                        ⚙️ Settings
+                      </Button>
+                      
+                      <Button
+                        variant="ghost"
+                        className="w-full justify-start text-left text-lg h-12"
+                        onClick={() => navigate("/feedback")}
+                      >
+                        💬 Feedback
+                      </Button>
+                      
+                      <Button
+                        variant="ghost"
+                        className="w-full justify-start text-left text-lg h-12"
+                        onClick={() => navigate("/support")}
+                      >
+                        📞 Contact Support
+                      </Button>
+                    </div>
+                  </div>
+                  
+                  <div className="p-4">
+                    <DrawerClose asChild>
+                      <Button variant="outline" className="w-full">
+                        Close Menu
+                      </Button>
+                    </DrawerClose>
+                  </div>
+                </div>
+              </DrawerContent>
+            </Drawer>
 
-        <div className="relative z-10 px-6 pb-8">
-          <h2 className="text-3xl font-bold text-white mb-2 text-center">
-            {subjectTitle} World
-          </h2>
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => navigate("/profile")}
+              className="w-8 h-8 bg-white bg-opacity-20 rounded-full flex items-center justify-center text-gray-800 font-bold hover:bg-opacity-30"
+            >
+              👤
+            </Button>
+          </div>
+        </div>
+        
+        <div className="relative z-10 flex flex-col items-center justify-center text-gray-800 pb-8">
+          <div className="text-4xl">{currentSubject.icon}</div>
         </div>
       </div>
 
@@ -98,28 +189,29 @@ const SubjectLearning = () => {
 
       {/* Topics List */}
       <div className="px-6 py-8 space-y-4">
-        {filteredTopics.map((topic, index) => (
+        {filteredTopics.map((topic: any, index: number) => (
           <div
             key={index}
-            onClick={() => handleTopicClick(topic)}
-            className="bg-gradient-to-r from-purple-100 to-purple-200 rounded-xl p-4 shadow-md hover:shadow-lg transition-all duration-200 cursor-pointer hover:scale-105"
+            onClick={() => handleTopicClick(topic.name)}
+            className="bg-white rounded-2xl p-6 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 cursor-pointer border border-gray-100"
           >
             <div className="flex items-center justify-between">
-              <div>
-                <h3 className="text-lg font-semibold text-purple-600">
-                  {topic}
+              <div className="flex-1">
+                <h3 className="text-lg font-bold text-gray-800 mb-2">
+                  {topic.name}
                 </h3>
+                <div className="flex items-center space-x-2">
+                  <div className="bg-gray-200 rounded-full h-2 flex-1">
+                    <div 
+                      className="bg-purple-600 h-2 rounded-full transition-all duration-300" 
+                      style={{width: `${topic.progress}%`}}
+                    ></div>
+                  </div>
+                  <span className="text-xs text-gray-600">{topic.progress}%</span>
+                </div>
               </div>
-              <div className="text-2xl">
-                {subject === "biology" && "🧬"}
-                {subject === "maths" && "📊"}
-                {subject === "chemistry" && "⚛️"}
-                {subject === "geography" && "🌍"}
-                {subject === "english" && "📚"}
-                {subject === "physics" && "⚡"}
-                {subject === "computer-science" && "💻"}
-                {subject === "history" && "🏛️"}
-                {subject === "environmental-science" && "🌱"}
+              <div className="text-3xl ml-4">
+                {topic.icon}
               </div>
             </div>
           </div>

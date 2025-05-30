@@ -1,11 +1,10 @@
-
 import { useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 
 const QuizGame = () => {
-  const { subject } = useParams<{ subject: string }>();
+  const { subject, topic } = useParams<{ subject: string; topic?: string }>();
   const navigate = useNavigate();
   const [currentQuestion, setCurrentQuestion] = useState(0);
   const [selectedAnswer, setSelectedAnswer] = useState<number | null>(null);
@@ -14,7 +13,7 @@ const QuizGame = () => {
   const [isAnswered, setIsAnswered] = useState(false);
 
   const quizData: { [key: string]: any } = {
-    "cell-biology": {
+    "biology-cell": {
       title: "Cell Biology Quiz",
       questions: [
         {
@@ -44,7 +43,7 @@ const QuizGame = () => {
         }
       ]
     },
-    "algebra": {
+    "math-algebra": {
       title: "Algebra Quiz",
       questions: [
         {
@@ -73,10 +72,61 @@ const QuizGame = () => {
           correct: 0
         }
       ]
+    },
+    "geography-volcanoes": {
+      title: "Volcanoes Quiz",
+      questions: [
+        {
+          question: "What type of rock forms from cooled lava?",
+          options: ["Sedimentary", "Metamorphic", "Igneous", "Limestone"],
+          correct: 2
+        },
+        {
+          question: "What is the ring of volcanoes around the Pacific Ocean called?",
+          options: ["Ring of Fire", "Pacific Ring", "Volcano Belt", "Fire Circle"],
+          correct: 0
+        },
+        {
+          question: "What causes volcanic eruptions?",
+          options: ["Tectonic plate movement", "Ocean currents", "Wind patterns", "Solar radiation"],
+          correct: 0
+        },
+        {
+          question: "Which gas is most commonly released during volcanic eruptions?",
+          options: ["Oxygen", "Carbon dioxide", "Water vapor", "Nitrogen"],
+          correct: 2
+        }
+      ]
+    },
+    "chemistry-periodic-table": {
+      title: "Periodic Table Quiz",
+      questions: [
+        {
+          question: "What is the chemical symbol for Gold?",
+          options: ["Go", "Gd", "Au", "Ag"],
+          correct: 2
+        },
+        {
+          question: "How many elements are in the first period?",
+          options: ["2", "8", "18", "32"],
+          correct: 0
+        },
+        {
+          question: "Which element has the atomic number 1?",
+          options: ["Helium", "Hydrogen", "Lithium", "Carbon"],
+          correct: 1
+        },
+        {
+          question: "What group do the noble gases belong to?",
+          options: ["Group 1", "Group 17", "Group 18", "Group 2"],
+          correct: 2
+        }
+      ]
     }
   };
 
-  const currentQuiz = quizData[subject || "cell-biology"] || quizData["cell-biology"];
+  const quizKey = `${subject}-${topic}` || "biology-cell";
+  const currentQuiz = quizData[quizKey] || quizData["biology-cell"];
   const questions = currentQuiz.questions;
   const totalQuestions = questions.length;
 
@@ -116,10 +166,11 @@ const QuizGame = () => {
     return (
       <div className="min-h-screen bg-white flex items-center justify-center">
         <div className="max-w-md mx-auto p-8 text-center">
+          <h1 className="text-2xl font-bold text-purple-600 mb-8">Eduventure</h1>
           <div className="text-6xl mb-4">
             {percentage >= 80 ? "🏆" : percentage >= 60 ? "🎉" : "📚"}
           </div>
-          <h1 className="text-3xl font-bold text-purple-600 mb-4">Quiz Results</h1>
+          <h2 className="text-3xl font-bold text-purple-600 mb-4">Quiz Results</h2>
           <div className="text-6xl font-bold text-purple-600 mb-2">{percentage}%</div>
           <p className="text-lg text-gray-600 mb-6">
             You scored {score} out of {totalQuestions} questions correctly!
@@ -158,7 +209,7 @@ const QuizGame = () => {
           >
             ← Back
           </Button>
-          <h1 className="text-xl font-bold text-center flex-1">Quiz</h1>
+          <h1 className="text-xl font-bold text-center flex-1">{currentQuiz.title}</h1>
           <Button
             variant="ghost"
             size="sm"
@@ -168,8 +219,6 @@ const QuizGame = () => {
             ❓
           </Button>
         </div>
-        
-        <h2 className="text-2xl font-bold mb-4 text-center">{currentQuiz.title}</h2>
         
         {/* Progress Bar */}
         <div className="space-y-2">
